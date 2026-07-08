@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+<title>DSA Lessons — Explained for Beginners</title>
+<style>
+  :root {
+    --bg:#f6f7fb; --surface:#fff; --surface-2:#eef0f7; --ink:#1a1d2b; --ink-soft:#4d5268;
+    --ink-faint:#8b8fa6; --line:#e2e5ef; --accent:#5b6ee8; --accent-soft:#eaecfd; --done:#34c77b;
+    --wip:#e8a33d; --track:#e2e5ef; --warn-soft:#fdf0e0; --pink:#d9568f; --red:#e05a5a; --teal:#1aa89c;
+    --green-soft:#e7f6ee; --red-soft:#fceceb;
+    --shadow:0 1px 2px rgba(26,29,43,.04),0 4px 16px rgba(26,29,43,.05);
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){:root{
+    --bg:#0f1118;--surface:#171a24;--surface-2:#1e2130;--ink:#eef0f7;--ink-soft:#b3b7cc;--ink-faint:#6b7089;
+    --line:#262a3a;--accent:#8291ff;--accent-soft:#22263c;--done:#3ddb89;--wip:#eeb45c;--track:#2b3042;
+    --warn-soft:#2a2318;--pink:#ef7fb2;--red:#f0736f;--teal:#43c8ba;--green-soft:#132b20;--red-soft:#2c1a1a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}}
+  :root[data-theme="light"]{--bg:#f6f7fb;--surface:#fff;--surface-2:#eef0f7;--ink:#1a1d2b;--ink-soft:#4d5268;--ink-faint:#8b8fa6;--line:#e2e5ef;--accent:#5b6ee8;--accent-soft:#eaecfd;--done:#34c77b;--wip:#e8a33d;--track:#e2e5ef;--warn-soft:#fdf0e0;--pink:#d9568f;--red:#e05a5a;--teal:#1aa89c;--green-soft:#e7f6ee;--red-soft:#fceceb;--shadow:0 1px 2px rgba(26,29,43,.04),0 4px 16px rgba(26,29,43,.05);}
+  :root[data-theme="dark"]{--bg:#0f1118;--surface:#171a24;--surface-2:#1e2130;--ink:#eef0f7;--ink-soft:#b3b7cc;--ink-faint:#6b7089;--line:#262a3a;--accent:#8291ff;--accent-soft:#22263c;--done:#3ddb89;--wip:#eeb45c;--track:#2b3042;--warn-soft:#2a2318;--pink:#ef7fb2;--red:#f0736f;--teal:#43c8ba;--green-soft:#132b20;--red-soft:#2c1a1a;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.68;-webkit-font-smoothing:antialiased;}
+  p{color:var(--ink-soft);}
+  b,strong{color:var(--ink);font-weight:640;}
+  em{color:var(--ink);font-style:italic;}
+  code{font-family:var(--mono);background:var(--surface-2);color:var(--ink);padding:1px 6px;border-radius:5px;font-size:.88em;}
+
+  /* progress bar + header */
+  #bar{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:60;transition:width .1s;}
+  header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .head-inner{max-width:1080px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px;}
+  .back{font-family:var(--mono);font-size:12px;color:var(--accent);text-decoration:none;border:1px solid var(--line);
+    border-radius:8px;padding:6px 11px;transition:all .15s;white-space:nowrap;}
+  .back:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .head-title{font-size:14px;font-weight:640;letter-spacing:-.01em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .toc-toggle{display:none;font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:var(--surface);
+    border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer;}
+
+  .layout{max-width:1080px;margin:0 auto;padding:0 22px;display:grid;grid-template-columns:236px 1fr;gap:40px;}
+  /* TOC */
+  nav.toc{position:sticky;top:66px;align-self:start;max-height:calc(100vh - 90px);overflow-y:auto;padding:26px 0 40px;}
+  nav.toc .ch{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);
+    margin:20px 0 7px;}
+  nav.toc .ch:first-child{margin-top:4px;}
+  nav.toc a{display:block;font-size:13px;color:var(--ink-soft);text-decoration:none;padding:4px 10px;border-radius:7px;
+    border-left:2px solid transparent;transition:all .12s;}
+  nav.toc a:hover{color:var(--ink);background:var(--surface-2);}
+  nav.toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft);font-weight:600;}
+
+  main{padding:26px 0 90px;min-width:0;max-width:720px;}
+  .hero{margin-bottom:8px;}
+  .hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0;}
+  .hero h1{font-size:30px;letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance;}
+  .hero p{font-size:16px;max-width:60ch;}
+
+  .lesson{padding-top:40px;margin-top:40px;border-top:1px solid var(--line);scroll-margin-top:74px;}
+  .lesson:first-of-type{border-top:0;}
+  .lesson .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);}
+  .lesson h2{font-size:24px;letter-spacing:-.02em;margin:.15em 0 .5em;text-wrap:balance;}
+  .lesson h3{font-size:16px;margin:26px 0 8px;letter-spacing:-.005em;}
+  .lesson p{font-size:15.5px;margin:12px 0;}
+  .lesson ul,.lesson ol{font-size:15.5px;color:var(--ink-soft);padding-left:22px;}
+  .lesson li{margin:6px 0;}
+  .lede{font-size:16.5px;color:var(--ink);line-height:1.6;}
+
+  .callout{border-left:3px solid var(--accent);border-radius:0 11px 11px 0;padding:13px 17px;margin:18px 0;
+    background:color-mix(in srgb,var(--accent) 6%,transparent);}
+  .callout .tag{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--accent);display:block;margin-bottom:4px;}
+  .callout p{margin:0;font-size:15px;color:var(--ink);}
+  .callout p+p{margin-top:8px;}
+  .callout.key{border-color:var(--wip);background:var(--warn-soft);}
+  .callout.key .tag{color:var(--wip);filter:brightness(.82);}
+  .callout.ex{border-color:var(--teal);background:var(--green-soft);}
+  .callout.ex .tag{color:var(--teal);}
+  .callout.gotcha{border-color:var(--red);background:var(--red-soft);}
+  .callout.gotcha .tag{color:var(--red);}
+
+  .trace{font-family:var(--mono);font-size:13px;background:var(--surface);border:1px solid var(--line);
+    border-radius:10px;padding:13px 15px;margin:14px 0;color:var(--ink-soft);overflow-x:auto;line-height:1.9;}
+  .trace .h{color:var(--accent);}
+  .trace b{color:var(--ink);}
+
+  .diagram{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0;overflow-x:auto;}
+  .diagram svg{display:block;max-width:100%;height:auto;margin:0 auto;}
+  .diagram .cap{font-size:12.5px;color:var(--ink-faint);text-align:center;margin-top:10px;font-family:var(--mono);}
+  .legend-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:12px;}
+  .legend-row span{font-size:11.5px;font-family:var(--mono);color:var(--ink-soft);display:inline-flex;align-items:center;gap:5px;}
+  .legend-row i{width:12px;height:3px;border-radius:2px;display:inline-block;}
+  svg text{font-family:var(--mono);}
+
+  .stepper{margin:16px 0;}
+  .step-ctrls{display:flex;align-items:center;gap:8px;margin-top:12px;justify-content:center;}
+  .step-ctrls button{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--surface);
+    border:1px solid var(--line);border-radius:8px;padding:7px 15px;cursor:pointer;transition:all .15s;}
+  .step-ctrls button:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+  .step-ctrls button:disabled{opacity:.4;cursor:default;}
+  .step-ctrls .count{font-family:var(--mono);font-size:12px;color:var(--ink-faint);min-width:46px;text-align:center;}
+  .step-note{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 15px;
+    font-size:14.5px;color:var(--ink);min-height:20px;margin-top:6px;line-height:1.55;}
+  .step-note b{color:var(--accent);}
+
+  table.cx{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  table.cx th,table.cx td{border:1px solid var(--line);padding:8px 11px;text-align:left;}
+  table.cx th{background:var(--surface-2);font-family:var(--mono);font-size:12px;letter-spacing:.03em;}
+  table.cx td{color:var(--ink-soft);}
+  table.cx code{font-size:12.5px;}
+
+  .next-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .next-links a{font-size:13px;color:var(--accent);text-decoration:none;background:var(--accent-soft);
+    padding:5px 11px;border-radius:7px;transition:all .15s;}
+  .next-links a:hover{background:var(--accent);color:#fff;}
+
+  footer{max-width:720px;margin:60px auto 0;padding:0 22px;text-align:center;font-size:13px;color:var(--ink-faint);}
+
+  @media (max-width:840px){
+    .layout{grid-template-columns:1fr;gap:0;}
+    nav.toc{position:static;max-height:none;padding:0;margin-top:14px;display:none;}
+    nav.toc.open{display:block;padding-bottom:20px;}
+    .toc-toggle{display:inline-block;}
+    main{padding-top:20px;}
+  }
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<header>
+  <div class="head-inner">
+    <a class="back" href="index.html" id="backLink">‹ Roadmap</a>
+    <span class="head-title">DSA Lessons — Explained for Beginners</span>
+    <button class="toc-toggle" id="tocToggle">Contents</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc"></nav>
+  <main>
+    <div class="hero">
+      <p class="eyebrow">The textbook</p>
+      <h1>Every concept, explained slowly and simply.</h1>
+      <p>No jargon dumped on you. Each lesson gives you the plain-English idea, a real-life comparison, a fully worked example, a picture, and the mistakes to avoid. Read it once carefully and it sticks. Jump straight to any topic from the contents, or arrive here by tapping “Learn” on the roadmap.</p>
+    </div>
+    <div id="lessons"></div>
+  </main>
+</div>
+<footer>You can always return to the <a class="back" style="display:inline-block;margin-top:6px" href="index.html">roadmap &amp; checklist ›</a></footer>
+
+<script>
+/* ---------- tiny SVG helpers ---------- */
+function box(x,y,w,h,fill,stroke,r=7){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;}
+function txt(x,y,s,o={}){const{size=13,fill="var(--ink)",w=500,anchor="middle"}=o;return `<text x="${x}" y="${y}" font-size="${size}" fill="${fill}" font-weight="${w}" text-anchor="${anchor}" dominant-baseline="middle">${s}</text>`;}
+function frame(vb,body,cap,legend=""){return `<div class="diagram"><svg viewBox="${vb}" role="img">${body}</svg>${cap?`<div class="cap">${cap}</div>`:""}${legend}</div>`;}
+function arrow(id,color){return `<defs><marker id="${id}" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="${color}"/></marker></defs>`;}
+
+const D = {
+  bigO(){
+    const x0=48,y0=178,x1=320,y1=22,N=22,ymax=22,W=340,H=200;
+    const fns=[{c:"var(--done)",f:()=>0.6},{c:"var(--accent)",f:i=>Math.log2(i+1)},{c:"var(--wip)",f:i=>i},{c:"var(--pink)",f:i=>i*Math.log2(i+1)/3},{c:"var(--red)",f:i=>i*i/9}];
+    let paths="";
+    fns.forEach(fn=>{let pts=[];for(let i=0;i<=N;i++){const cl=Math.min(fn.f(i),ymax);const px=x0+(i/N)*(x1-x0);const py=y0-(cl/ymax)*(y0-y1);pts.push(px.toFixed(1)+","+py.toFixed(1));}paths+=`<polyline points="${pts.join(" ")}" fill="none" stroke="${fn.c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;});
+    const axes=`<line x1="${x0}" y1="${y1}" x2="${x0}" y2="${y0}" stroke="var(--line)" stroke-width="1.5"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="var(--line)" stroke-width="1.5"/>${txt((x0+x1)/2,y0+18,"how big your input is →",{size:11,fill:"var(--ink-faint)"})}${txt(x0-8,(y0+y1)/2,"time",{size:10,fill:"var(--ink-faint)"})}`;
+    const legend=`<div class="legend-row"><span><i style="background:var(--done)"></i>O(1)</span><span><i style="background:var(--accent)"></i>O(log n)</span><span><i style="background:var(--wip)"></i>O(n)</span><span><i style="background:var(--pink)"></i>O(n log n)</span><span><i style="background:var(--red)"></i>O(n²)</span></div>`;
+    return frame(`0 0 ${W} ${H}`,axes+paths,"The lower and flatter the line, the faster the code stays as data grows.",legend);
+  },
+  array(){const vals=[7,2,9,4,1],bw=52,gap=8,x0=30,y=22;let b="";vals.forEach((v,i)=>{const x=x0+i*(bw+gap);b+=box(x,y,bw,46,"var(--surface)","var(--line)")+txt(x+bw/2,y+23,v,{w:600})+txt(x+bw/2,y+62,"["+i+"]",{size:11,fill:"var(--ink-faint)"});});return frame("0 0 330 92",b,"Values in numbered boxes. Ask for box [3] and you get it instantly.");},
+  twoPointers(){const vals=[1,3,5,7,9,11],bw=44,gap=6,x0=34,y=40;let b="";vals.forEach((v,i)=>{const x=x0+i*(bw+gap);b+=box(x,y,bw,42,"var(--surface)","var(--line)")+txt(x+bw/2,y+21,v,{w:600});});const L=x0+bw/2,R=x0+5*(bw+gap)+bw/2;b+=`<path d="M${L} 30 v-14" stroke="var(--accent)" stroke-width="2"/>`+txt(L,10,"L",{size:12,fill:"var(--accent)",w:700})+`<path d="M${R} 30 v-14" stroke="var(--pink)" stroke-width="2"/>`+txt(R,10,"R",{size:12,fill:"var(--pink)",w:700})+txt(160,105,"they move inward, toward each other",{size:11,fill:"var(--ink-faint)"});return frame("0 0 320 118",b,"Two markers, one at each end.");},
+  slidingWindow(){const vals=[2,1,5,1,3,2],bw=44,gap=6,x0=34,y=34;let b="";vals.forEach((v,i)=>{const x=x0+i*(bw+gap);const w=i>=1&&i<=3;b+=box(x,y,bw,42,w?"var(--accent-soft)":"var(--surface)","var(--line)")+txt(x+bw/2,y+21,v,{w:600});});const wx=x0+1*(bw+gap)-4,ww=3*(bw+gap)-gap+8;b+=`<rect x="${wx}" y="${y-6}" width="${ww}" height="54" rx="9" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M${wx+ww} 22 h22" stroke="var(--accent)" stroke-width="2" marker-end="url(#aw)"/>`+arrow("aw","var(--accent)");return frame("0 0 330 96",b,"A window of 3, sliding one box at a time.");},
+  prefix(){const vals=[3,1,4,1,5],pre=[3,4,8,9,14],bw=46,gap=8,x0=24,y=24;let b="";vals.forEach((v,i)=>{const x=x0+i*(bw+gap);b+=box(x,y,bw,34,"var(--surface)","var(--line)")+txt(x+bw/2,y+17,v,{w:600});b+=box(x,y+44,bw,34,"var(--accent-soft)","var(--accent)")+txt(x+bw/2,y+61,pre[i],{w:600,fill:"var(--accent)"});});b+=txt(x0-4,y+17,"",{});return frame("0 0 300 92",b,"Top: the numbers. Bottom (blue): running totals. Sum of boxes 1–3 = 9 − 3 = 6.");},
+  hashMap(){let b=box(14,44,88,34,"var(--surface)","var(--line)")+txt(58,61,'"cat"',{size:12,w:600})+box(136,38,74,46,"var(--accent-soft)","var(--accent)")+txt(173,61,"hash()",{size:11,fill:"var(--accent)",w:600})+`<path d="M104 61 h28" stroke="var(--ink-faint)" stroke-width="2" marker-end="url(#ah)"/><path d="M212 61 h26" stroke="var(--ink-faint)" stroke-width="2" marker-end="url(#ah)"/>`;const sx=244,sy=20,sh=27;[0,1,2,3].forEach((s,i)=>{const y=sy+i*(sh+2);const hit=i===2;b+=box(sx,y,38,sh,hit?"var(--accent-soft)":"var(--surface)","var(--line)",5)+txt(sx+19,y+sh/2,i,{size:11,fill:"var(--ink-faint)"});if(hit)b+=box(sx+44,y,72,sh,"var(--surface)","var(--line)",5)+txt(sx+80,y+sh/2,"data",{size:11,w:600});});b+=arrow("ah","var(--ink-faint)");return frame("0 0 372 138",b,"The key runs through a formula that points straight to its slot.");},
+  linkedList(){const vals=[3,7,1],bw=46,y=30,gap=54,x0=24;let b="";vals.forEach((v,i)=>{const x=x0+i*(bw+gap);b+=box(x,y,bw,42,"var(--surface)","var(--line)")+txt(x+bw/2,y+21,v,{w:600});b+=`<path d="M${x+bw} ${y+21} h${gap-10}" stroke="var(--accent)" stroke-width="2" marker-end="url(#all)"/>`;});const lastx=x0+vals.length*(bw+gap);b+=txt(lastx+14,y+21,"∅",{size:16,fill:"var(--ink-faint)"})+arrow("all","var(--accent)");return frame("0 0 320 90",b,"Each box points to the next. The last points to nothing (∅).");},
+  stack(){let b="";const vals=["A","B","C"],bw=90,bh=32,x=118,y0=90;vals.forEach((v,i)=>{const y=y0-i*(bh+4);b+=box(x,y,bw,bh,i===vals.length-1?"var(--accent-soft)":"var(--surface)","var(--line)")+txt(x+bw/2,y+bh/2,v,{w:600});});b+=`<path d="M${x+bw+16} 30 v-14 M${x+bw+16} 16 l-5 6 M${x+bw+16} 16 l5 6" stroke="var(--accent)" stroke-width="2" fill="none"/>`+txt(x+bw+16,44,"push",{size:11,fill:"var(--accent)"})+`<path d="M${x-16} 16 v14 M${x-16} 16 l-5 6 M${x-16} 16 l5 6" stroke="var(--pink)" stroke-width="2" fill="none"/>`+txt(x-16,44,"pop",{size:11,fill:"var(--pink)"});return frame("0 0 330 132",b,"Add and remove from the TOP only. Last In, First Out.");},
+  queue(){let b="";const vals=["A","B","C","D"],bw=48,bh=42,x0=54,y=40;vals.forEach((v,i)=>{const x=x0+i*(bw+6);b+=box(x,y,bw,bh,"var(--surface)","var(--line)")+txt(x+bw/2,y+21,v,{w:600});});b+=txt(x0-18,y+21,"out",{size:11,fill:"var(--pink)"})+`<path d="M${x0-4} ${y+21} h-14" stroke="var(--pink)" stroke-width="2" marker-end="url(#aq1)"/>`;const endx=x0+4*(bw+6);b+=txt(endx+16,y+21,"in",{size:11,fill:"var(--accent)"})+`<path d="M${endx-6} ${y+21} h14" stroke="var(--accent)" stroke-width="2" marker-end="url(#aq2)"/>`+arrow("aq1","var(--pink)").replace("aq1","aq1")+`<defs><marker id="aq2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="var(--accent)"/></marker></defs>`;return frame("0 0 340 96",b,"Join at the back, leave from the front. First In, First Out.");},
+  tree(){let b="";const n={A:[150,26],B:[80,86],C:[220,86],D:[40,146],E:[118,146],F:[258,146]},e=[["A","B"],["A","C"],["B","D"],["B","E"],["C","F"]],l={A:1,B:2,C:3,D:4,E:5,F:6};e.forEach(([u,v])=>{b+=`<line x1="${n[u][0]}" y1="${n[u][1]}" x2="${n[v][0]}" y2="${n[v][1]}" stroke="var(--line)" stroke-width="2"/>`;});for(const k in n){const[x,y]=n[k];b+=`<circle cx="${x}" cy="${y}" r="17" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"/>`+txt(x,y,l[k],{w:600});}b+=txt(150,9,"root",{size:10,fill:"var(--ink-faint)"})+txt(40,168,"leaf",{size:10,fill:"var(--ink-faint)"});return frame("0 0 300 176",b,"One root at the top, branching into children. A node with no children is a leaf.");},
+  bfsdfs(){const n={A:[70,26],B:[35,80],C:[105,80],D:[18,134],E:[62,134]},e=[["A","B"],["A","C"],["B","D"],["B","E"]];function t(order,ox,color,label){let b="";e.forEach(([u,v])=>{b+=`<line x1="${n[u][0]+ox}" y1="${n[u][1]}" x2="${n[v][0]+ox}" y2="${n[v][1]}" stroke="var(--line)" stroke-width="2"/>`;});const o={};order.forEach((x,i)=>o[x]=i+1);for(const k in n){const[x,y]=n[k];b+=`<circle cx="${x+ox}" cy="${y}" r="15" fill="var(--surface)" stroke="${color}" stroke-width="1.8"/>`+txt(x+ox,y,o[k],{size:12,w:700,fill:color});}b+=txt(ox+62,168,label,{size:11,fill:color,w:600});return b;}let b=t(["A","B","C","D","E"],0,"var(--accent)","BFS: level by level")+t(["A","B","D","E","C"],160,"var(--pink)","DFS: deep first");return frame("0 0 300 182",b,"Numbers show the order each node is visited.");},
+  heap(){let b="";const n={A:[130,26,1],B:[70,84,3],C:[200,84,4],D:[40,140,8],E:[105,140,5],F:[235,140,9]},e=[["A","B"],["A","C"],["B","D"],["B","E"],["C","F"]];e.forEach(([u,v])=>{b+=`<line x1="${n[u][0]}" y1="${n[u][1]}" x2="${n[v][0]}" y2="${n[v][1]}" stroke="var(--line)" stroke-width="2"/>`;});for(const k in n){const[x,y,val]=n[k];b+=`<circle cx="${x}" cy="${y}" r="17" fill="${val===1?'var(--accent-soft)':'var(--surface)'}" stroke="var(--accent)" stroke-width="1.8"/>`+txt(x,y,val,{w:600});}b+=txt(130,9,"smallest, always on top",{size:10,fill:"var(--ink-faint)"});return frame("0 0 290 165",b,"Every parent is smaller than its children.");},
+  graph(){let b="";const n={A:[60,40],B:[180,30],C:[250,110],D:[130,140],E:[40,120]},e=[["A","B"],["A","E"],["B","C"],["C","D"],["D","E"],["B","D"]];e.forEach(([u,v])=>{b+=`<line x1="${n[u][0]}" y1="${n[u][1]}" x2="${n[v][0]}" y2="${n[v][1]}" stroke="var(--line)" stroke-width="2"/>`;});for(const k in n){const[x,y]=n[k];b+=`<circle cx="${x}" cy="${y}" r="17" fill="var(--surface)" stroke="var(--teal)" stroke-width="1.8"/>`+txt(x,y,k,{w:600,fill:"var(--teal)"});}return frame("0 0 300 175",b,"Dots joined by lines. Think cities & roads, or people & friendships.");},
+  fib(){let b="";const N={f4:[150,24,"f(4)",0],f3:[80,76,"f(3)",0],f2a:[220,76,"f(2)",1],f2b:[40,128,"f(2)",1],f1a:[118,128,"f(1)",0],f1b:[190,128,"f(1)",0],f0a:[262,128,"f(0)",0],f1c:[16,180,"f(1)",0],f0b:[68,180,"f(0)",0]};const E=[["f4","f3"],["f4","f2a"],["f3","f2b"],["f3","f1a"],["f2a","f1b"],["f2a","f0a"],["f2b","f1c"],["f2b","f0b"]];E.forEach(([u,v])=>{b+=`<line x1="${N[u][0]}" y1="${N[u][1]}" x2="${N[v][0]}" y2="${N[v][1]}" stroke="var(--line)" stroke-width="1.6"/>`;});for(const k in N){const[x,y,l,dup]=N[k];const col=dup?"var(--red)":"var(--accent)";const fill=dup?"color-mix(in srgb,var(--red) 12%,transparent)":"var(--surface)";b+=`<circle cx="${x}" cy="${y}" r="16" fill="${fill}" stroke="${col}" stroke-width="1.8"/>`+txt(x,y,l,{size:11,w:600,fill:col});}return frame("0 0 300 208",b,"Naive fib(4): the red calls repeat. For fib(40) that's over a billion repeats.",`<div class="legend-row"><span><i style="background:var(--red)"></i>same work, computed again</span></div>`);},
+  fibMemo(){let b="";const vals=[0,1,1,2,3],bw=48,y=30,x0=24;vals.forEach((v,i)=>{const x=x0+i*(bw+14);b+=box(x,y,bw,42,"var(--accent-soft)","var(--accent)")+txt(x+bw/2,y+21,v,{w:600})+txt(x+bw/2,y+58,"f("+i+")",{size:10,fill:"var(--ink-faint)"});if(i<vals.length-1)b+=`<path d="M${x+bw} ${y+21} h10" stroke="var(--accent)" stroke-width="2" marker-end="url(#afm)"/>`;});b+=arrow("afm","var(--accent)");return frame("0 0 320 100",b,"With DP: fill each box once, left to right. fib(40) is now 40 quick steps.");},
+  mergeSort(){let b="";function row(vals,y,split){let s="";const bw=30,gap=4,total=vals.length*(bw+gap)-gap,x0=(300-total)/2;vals.forEach((v,i)=>{const x=x0+i*(bw+gap);s+=box(x,y,bw,26,"var(--surface)","var(--line)",5)+txt(x+bw/2,y+13,v,{size:12,w:600});});return s;}
+    b+=row([8,3,5,2],14);b+=txt(150,54,"split",{size:10,fill:"var(--ink-faint)"});b+=row([8,3],66,true);b+=`<g transform="translate(130,0)">`+row([5,2],66)+`</g>`;
+    // simplify: just show split then merged
+    b="";b+=row([8,3,5,2],10);b+=`<path d="M150 40 v10" stroke="var(--line)" stroke-width="1.5"/>`+txt(150,58,"split in half, sort each, then merge",{size:10,fill:"var(--ink-faint)"});b+=`<path d="M150 66 v10" stroke="var(--line)" stroke-width="1.5"/>`;b+=row([2,3,5,8],84);b+=txt(150,124,"sorted!",{size:11,fill:"var(--done)",w:600});
+    return frame("0 0 300 136",b,"Merge sort: break down, then combine sorted pieces.");},
+};
+
+/* interactive widget markup */
+const RECURSION_WIDGET = `<div class="stepper" id="recW"><div class="diagram" style="padding-top:20px"><svg viewBox="0 0 340 200" id="recSvg"></svg><div class="cap" id="recPhase"></div></div><div class="step-note" id="recNote"></div><div class="step-ctrls"><button id="recPrev">‹ Back</button><span class="count" id="recCount"></span><button id="recNext">Next ›</button></div></div>`;
+const BINARY_WIDGET = `<div class="stepper" id="bsW"><div class="diagram"><svg viewBox="0 0 400 118" id="bsSvg"></svg></div><div class="step-note" id="bsNote"></div><div class="step-ctrls"><button id="bsPrev">‹ Back</button><span class="count" id="bsCount"></span><button id="bsNext">Next ›</button></div></div>`;
+
+/* ---------- the lessons ---------- */
+const L = [
+{id:"intro",ch:"Foundations",title:"What is DSA, really?",body:`
+<p class="lede">Before the fancy words, here's the whole subject in one breath: a <b>data structure</b> is a way to <em>store</em> your information, and an <b>algorithm</b> is the <em>set of steps</em> you follow to get a job done. That's it. Everything else is just specific structures and specific step-recipes.</p>
+<div class="callout"><span class="tag">Think of a kitchen</span><p>You store food in different containers — a spice rack, a fridge, a cutlery drawer. Each makes <em>some</em> task easy: the rack makes finding cumin fast, the fridge keeps milk cold. That's exactly what a data structure does — it holds data in a shape that makes certain operations quick.</p><p>A <b>recipe</b> is your algorithm: “chop the onions, then fry them, then add rice.” A clear, ordered set of steps that turns ingredients into a meal.</p></div>
+<h3>Why should a beginner care?</h3>
+<p>Two reasons. First, <b>speed</b>: the right structure can turn a program that takes an hour into one that takes a second. Second, <b>thinking</b>: DSA trains you to break a messy problem into clean, solvable pieces — a skill you'll use forever, in every job, even outside coding.</p>
+<p>You do <em>not</em> need to be a maths genius. You need clear pictures and a bit of practice. That's what these lessons give you. Let's start with the one tool that lets us compare “fast” and “slow” — Big-O.</p>
+<div class="next-links"><a href="#bigo">Next: Big-O →</a></div>`},
+
+{id:"bigo",ch:"Foundations",title:"Big-O: how we measure fast vs. slow",body:`
+<p class="lede">Two programs can both give the correct answer, yet one finishes instantly and the other crawls. Big-O is the language we use to describe that difference — without ever touching a stopwatch.</p>
+<div class="callout key"><span class="tag">The single question Big-O answers</span><p>“If I make my input <b>10× bigger</b>, does my program get 10× slower? 100× slower? Or barely slower at all?” Big-O describes how the amount of work <em>grows</em> as the input grows.</p></div>
+<h3>Why not just measure seconds?</h3>
+<p>Because seconds depend on your laptop, the weather of the CPU, other apps running… messy. Big-O ignores all that and looks only at the <em>shape</em> of the growth. We also drop small details: we say <code>O(n)</code>, not <code>O(2n + 5)</code>, because when <code>n</code> is huge, the “×2” and “+5” barely matter compared to the shape.</p>
+${D.bigO()}
+<h3>The five you'll meet again and again</h3>
+<div class="callout"><span class="tag">Everyday versions</span>
+<p><b>O(1) — “constant.”</b> Grabbing a book when you already know the exact shelf. Same effort whether the library has 10 books or 10 million.</p>
+<p><b>O(log n) — “logarithmic.”</b> Guessing a number between 1 and 100 by always picking the middle. Each guess throws away half. Even for a billion numbers, it takes only ~30 guesses. Wonderfully fast.</p>
+<p><b>O(n) — “linear.”</b> Reading every page of a book once. Double the pages, double the time. Perfectly reasonable.</p>
+<p><b>O(n log n).</b> The speed of good sorting. A bit slower than linear, still very usable.</p>
+<p><b>O(n²) — “quadratic.”</b> Everyone at a party shaking hands with everyone else. 10 people → 45 handshakes; 100 people → ~5,000. Grows painfully fast — a warning sign in your code.</p></div>
+<h3>How to read the Big-O of your own code</h3>
+<p>A quick rule of thumb for beginners: <b>count your loops over the data.</b></p>
+<ul><li>No loop, just a direct action → <code>O(1)</code>.</li><li>One loop over <code>n</code> items → <code>O(n)</code>.</li><li>A loop inside a loop, both over the data → <code>O(n²)</code>.</li><li>Each step cuts the problem in half → <code>O(log n)</code>.</li></ul>
+<table class="cx"><tr><th>For n = 1,000,000, roughly…</th><th>steps</th></tr><tr><td><code>O(1)</code></td><td>1</td></tr><tr><td><code>O(log n)</code></td><td>~20</td></tr><tr><td><code>O(n)</code></td><td>1,000,000</td></tr><tr><td><code>O(n²)</code></td><td>1,000,000,000,000 😱</td></tr></table>
+<div class="callout gotcha"><span class="tag">Watch out</span><p>Big-O describes the <em>worst case</em> unless we say otherwise, and it's about <em>large</em> inputs. For tiny inputs a “slow” algorithm can be totally fine. Don't over-optimize a 10-item list.</p></div>`},
+
+{id:"arrays",ch:"Linear structures",title:"Arrays — numbered boxes in a row",body:`
+<p class="lede">The array is the most basic container: a row of boxes sitting side by side, each with a number called its <b>index</b>. Indexes start at <b>0</b>, not 1 — the first box is [0].</p>
+${D.array()}
+<h3>Why is grabbing any box instant?</h3>
+<p>Because the boxes are lined up in memory back-to-back and are all the same size, the computer can do a tiny piece of arithmetic — “start here, jump 3 boxes forward” — and land exactly on box [3]. No searching. That's the array's superpower: <b>instant access by index, O(1)</b>.</p>
+<div class="callout key"><span class="tag">The trade-off</span><p>Inserting or deleting in the <em>middle</em> is slow (<code>O(n)</code>): everything after the gap has to shuffle over to make room or close the hole. Arrays are brilliant for reading, clumsy for lots of middle-insertions.</p></div>
+<h3>Strings are just arrays of characters</h3>
+<p><code>"cat"</code> is really a row of boxes: <code>'c'</code>, <code>'a'</code>, <code>'t'</code>. Everything you learn about arrays applies to strings too.</p>
+<p>Two array techniques are so useful they get their own lessons next: <b>two pointers</b> and the <b>sliding window</b>.</p>
+<div class="next-links"><a href="#two-pointers">Two pointers →</a><a href="#sliding-window">Sliding window →</a></div>`},
+
+{id:"two-pointers",ch:"Linear structures",title:"Two pointers — closing in from both ends",body:`
+<p class="lede">Imagine you must find two numbers in a <b>sorted</b> list that add up to 12. The beginner instinct is to check every pair — that's a loop inside a loop, <code>O(n²)</code>, slow. Two pointers does it in one pass, <code>O(n)</code>.</p>
+${D.twoPointers()}
+<h3>The idea</h3>
+<p>Put one finger (<b>L</b>) on the leftmost number and another (<b>R</b>) on the rightmost. Look at their sum:</p>
+<ul><li>Sum too <b>small</b>? You need more — move <b>L</b> right to a bigger number.</li><li>Sum too <b>big</b>? You need less — move <b>R</b> left to a smaller number.</li><li>Sum is exactly the target? Found it!</li></ul>
+<div class="callout ex"><span class="tag">Worked example — target 12</span><p>List: <code>[1, 3, 5, 7, 9, 11]</code></p></div>
+<div class="trace">L=1, R=11 → 1+11=<b>12</b> ✓ <span class="h">found!</span>
+… (if instead target were 10:)
+L=1, R=11 → 12, too big → move R left
+L=1, R=9  → 10 ✓ found</div>
+<p>Because each step moves a pointer inward, the two fingers meet after at most <code>n</code> steps. One clean pass.</p>
+<div class="callout key"><span class="tag">When to reach for it</span><p>The data is <b>sorted</b> (or you can sort it), and you're hunting for a pair/triplet, or comparing items from opposite ends (like checking a palindrome).</p></div>`},
+
+{id:"sliding-window",ch:"Linear structures",title:"Sliding window — reuse instead of recompute",body:`
+<p class="lede">Question: in the list <code>[2, 1, 5, 1, 3, 2]</code>, what's the biggest sum of any 3 boxes in a row? The lazy way adds up every group of 3 from scratch. The smart way slides a “window” and reuses work.</p>
+${D.slidingWindow()}
+<h3>The trick</h3>
+<p>Add up the first 3 boxes: 2+1+5 = 8. Now to check the next group, don't re-add everything. Just <b>subtract the box leaving</b> the window and <b>add the box entering</b> it:</p>
+<div class="trace">window [2 1 5] = <b>8</b>
+slide → drop 2, add 1 → 8 − 2 + 1 = <b>7</b>
+slide → drop 1, add 3 → 7 − 1 + 3 = <b>9</b>  <span class="h">← best</span>
+slide → drop 5, add 2 → 9 − 5 + 2 = 6</div>
+<p>Each slide is a quick subtract-and-add instead of re-summing the whole window. The whole scan becomes <code>O(n)</code>.</p>
+<div class="callout key"><span class="tag">When to reach for it</span><p>Any question about a <b>contiguous</b> chunk — “longest substring without repeats”, “smallest subarray with sum ≥ X”, “max sum of k in a row.” The window can be a fixed size, or grow and shrink as rules allow.</p></div>`},
+
+{id:"prefix-sum",ch:"Linear structures",title:"Prefix sums — a running balance",body:`
+<p class="lede">If someone will ask you many times “what's the total of boxes 2 through 5?”, recomputing each time is wasteful. Prefix sums let you answer any such question with a single subtraction.</p>
+${D.prefix()}
+<h3>How it works</h3>
+<p>Build a second array where each slot holds the total of everything <em>up to</em> that point — like a running bank balance. Then the sum of any range is just <code>balance at the end − balance before the start</code>.</p>
+<div class="callout ex"><span class="tag">Example</span><p>Numbers <code>[3,1,4,1,5]</code> → running totals <code>[3,4,8,9,14]</code>. Sum of boxes 1–3 (the 1, 4, 1) = <code>9 − 3 = 6</code>. One subtraction, no matter how big the range.</p></div>
+<p>Building the balances is <code>O(n)</code> once; every question after that is <code>O(1)</code>.</p>`},
+
+{id:"hashing",ch:"Linear structures",title:"Hash maps — the instant lookup",body:`
+<p class="lede">A hash map stores pairs of <b>key → value</b> and can find any key almost instantly. It's the single most useful structure for everyday problems, so learn it well.</p>
+${D.hashMap()}
+<h3>The magic: a formula, not a search</h3>
+<p>When you store <code>"cat" → data</code>, the map runs the key through a <b>hash function</b> — a formula that turns “cat” into a slot number. To look it up later, it runs the same formula, lands on the same slot, and grabs the value. No scanning the whole thing. That's why lookups, inserts, and deletes are <b>O(1) on average</b>.</p>
+<div class="callout"><span class="tag">Map vs. Set</span><p>A <b>map</b> stores key → value (like a dictionary: word → definition). A <b>set</b> just stores keys, answering one question: “is this thing in here?” Both are hash-powered and equally fast.</p></div>
+<h3>The pattern to internalize</h3>
+<p>Whenever you catch yourself thinking <em>“have I seen this before?”</em> or <em>“how many times does each thing appear?”</em>, a hash map is almost always the answer.</p>
+<div class="callout ex"><span class="tag">Worked example — Two Sum</span><p>Find two numbers adding to 9 in <code>[2, 7, 4]</code>. Walk once, and for each number ask the map “have I seen the piece you're missing?”</p></div>
+<div class="trace">see 2 → need 7. Map empty. Store {2}.
+see 7 → need 2. <b>2 is in the map!</b> <span class="h">answer: 2 + 7</span></div>
+<p>One pass, <code>O(n)</code> — beating the nested-loop <code>O(n²)</code>.</p>
+<div class="callout gotcha"><span class="tag">Watch out</span><p>Sometimes two keys land in the same slot (a “collision”). Good hash maps handle this quietly, but it's why the speed is “O(1) <em>on average</em>” rather than guaranteed.</p></div>`},
+
+{id:"linked-list",ch:"Linear structures",title:"Linked lists — follow the arrows",body:`
+<p class="lede">An array keeps its boxes in a tidy row. A linked list scatters them anywhere in memory, and each box holds an <b>arrow</b> pointing to the next one. To move through the list, you follow arrows.</p>
+${D.linkedList()}
+<h3>Array vs. linked list — the trade</h3>
+<ul><li><b>Array:</b> jump to any box instantly, but inserting in the middle means shuffling everyone over.</li><li><b>Linked list:</b> can't jump (you must walk from the start), but inserting or deleting is cheap — just re-point a couple of arrows.</li></ul>
+<div class="callout"><span class="tag">Analogy — a treasure hunt</span><p>Each clue tells you where the next clue is. You can't skip to clue #5; you follow the trail. But adding a new clue is easy — just rewrite one note to point at it.</p></div>
+<h3>The classic move: reversing</h3>
+<p>Reversing a linked list means flipping every arrow to point backward. You walk through carrying three fingers — previous, current, next — and flip one arrow at a time. It feels fiddly at first; drawing it on paper makes it click.</p>
+<div class="callout key"><span class="tag">Fast &amp; slow pointers</span><p>Send one pointer 1 step at a time and another 2 steps. If the list secretly loops back on itself, the fast one eventually laps and <em>meets</em> the slow one — that's how you detect a cycle. The same trick finds the middle of a list in one pass.</p></div>`},
+
+{id:"stack",ch:"Linear structures",title:"Stacks — a pile of plates (LIFO)",body:`
+<p class="lede">A stack lets you add and remove items from <b>one end only — the top</b>. The last thing you put on is the first thing you take off. That's LIFO: Last In, First Out.</p>
+${D.stack()}
+<h3>Everyday stacks</h3>
+<ul><li>A pile of plates — you take from the top.</li><li><b>Undo</b> in any app — the most recent action is undone first.</li><li>Your browser's <b>back button</b> — the last page you visited comes back first.</li></ul>
+<div class="callout ex"><span class="tag">Worked example — matching brackets</span><p>Check if <code>( [ ] )</code> is balanced. Push every opener; when you hit a closer, the top of the stack must be its matching opener.</p></div>
+<div class="trace">'(' → push  → stack: (
+'[' → push  → stack: ( [
+']' → closer, top is '[' ✓ pop → stack: (
+')' → closer, top is '(' ✓ pop → stack: empty
+empty at end → <b>balanced!</b></div>
+<div class="callout key"><span class="tag">Secret link to recursion</span><p>The computer runs your function calls on a stack — the “call stack.” This is <em>exactly</em> why recursion works the way it does. Keep this in mind when you reach the recursion lesson.</p></div>`},
+
+{id:"queue",ch:"Linear structures",title:"Queues — a line at the shop (FIFO)",body:`
+<p class="lede">A queue is the opposite discipline to a stack: you join at the <b>back</b> and leave from the <b>front</b>. First In, First Out — just like a fair line.</p>
+${D.queue()}
+<h3>Everyday queues</h3>
+<ul><li>A checkout line — first come, first served.</li><li>A printer's job list — documents print in the order sent.</li><li>Exploring a maze “level by level” (you'll use a queue for graph BFS later).</li></ul>
+<div class="callout"><span class="tag">A cousin: the deque</span><p>A “double-ended queue” lets you add/remove from <em>both</em> ends. Handy for a few advanced sliding-window tricks — file it away for later.</p></div>`},
+
+{id:"recursion",ch:"Recursion & search",title:"Recursion — a function that calls itself",body:`
+<p class="lede">Recursion trips up almost every beginner, so let's go slowly. Recursion is simply a function that solves a big problem by calling <em>itself</em> on a <b>smaller</b> version of the same problem — until the problem is small enough to answer outright.</p>
+<div class="callout"><span class="tag">Russian nesting dolls</span><p>To open the biggest doll, you open the one inside it, and the one inside that, and so on — until you reach the tiniest doll that <em>doesn't</em> open. Then you close them all back up in reverse. That tiniest doll is the <b>base case</b>; opening each smaller doll is the <b>recursive step</b>.</p></div>
+<div class="callout key"><span class="tag">Two rules that keep recursion safe</span><p><b>1. A base case</b> — a simple situation you can answer with no further calls. It's the “stop” sign.<br><b>2. Every call must get closer to the base case</b> — the problem must shrink each time, or the function calls itself forever and crashes.</p></div>
+<h3>See it in slow motion</h3>
+<p>Let's compute <code>factorial(4)</code> = 4 × 3 × 2 × 1. The rule is: <code>factorial(n) = n × factorial(n−1)</code>, and the base case is <code>factorial(1) = 1</code>. Step through it. Watch the calls pile up as we go <b>down</b>, then watch answers bubble back <b>up</b>:</p>
+${RECURSION_WIDGET}
+<p>Notice the shape: <b>down, then up.</b> Going down, each call waits, unfinished, for a smaller call to come back with an answer. Those waiting calls stack up on the <em>call stack</em> (remember the stack lesson!). When we hit the base case, answers flow back up and each waiting call finishes its multiplication.</p>
+<div class="callout"><span class="tag">The mindset: trust the recursion</span><p>Don't try to trace all 4 levels in your head — you'll get dizzy. Instead trust that <code>factorial(3)</code> “just works” and gives you 6, then ask only: what do <em>I</em> do with that? (Answer: multiply by 4.) Solve one layer and trust the rest.</p></div>
+<div class="callout gotcha"><span class="tag">The #1 beginner bug</span><p>Forgetting the base case, or writing a call that doesn't shrink. The function then calls itself endlessly until the call stack overflows and the program crashes (“stack overflow” — yes, that's where the website got its name).</p></div>
+<div class="next-links"><a href="#binary-search">Next: binary search →</a></div>`},
+
+{id:"binary-search",ch:"Recursion & search",title:"Binary search — halve the haystack",body:`
+<p class="lede">To find a word in a dictionary you don't start at page 1. You flip to the middle, decide “earlier or later”, and repeat on the half that matters. Binary search is that idea, and it only works on <b>sorted</b> data.</p>
+<h3>Why it's so fast</h3>
+<p>Each look throws away <em>half</em> of what's left. A million items? About 20 looks. A billion? Only ~30. That halving is <code>O(log n)</code> — dramatically faster than checking items one by one.</p>
+<p>Step through a real search for the number <b>23</b>:</p>
+${BINARY_WIDGET}
+<p>We track two edges, <code>lo</code> and <code>hi</code>, and always peek at the <code>mid</code>. If mid is too small, the answer must be to the right, so we move <code>lo</code> past mid. Too big? move <code>hi</code> before mid. The live range shrinks by half every step until we land on the target.</p>
+<div class="callout key"><span class="tag">The mind-expanding version: “binary search on the answer”</span><p>Sometimes you're not searching a list, but a <em>range of possible answers</em> where a check flips from “no” to “yes” at some point. Example: “what's the slowest eating speed that still finishes the bananas in time?” You can binary-search the speed. Spotting this unlocks a whole class of tricky problems.</p></div>
+<div class="callout gotcha"><span class="tag">Watch out</span><p>Off-by-one errors are the classic binary-search trap: should <code>lo</code> become <code>mid</code> or <code>mid+1</code>? Should the loop be <code>lo &lt;= hi</code> or <code>lo &lt; hi</code>? Pick one template, understand exactly why it terminates, and reuse it everywhere.</p></div>`},
+
+{id:"sorting",ch:"Recursion & search",title:"Sorting — and the “divide & conquer” idea",body:`
+<p class="lede">Sorting means putting items in order. In real projects you'll call a built-in sort — but understanding <b>how</b> good sorts work teaches you a thinking pattern used all over CS: divide and conquer.</p>
+${D.mergeSort()}
+<h3>Merge sort, in plain words</h3>
+<ol><li><b>Divide:</b> split the list into two halves.</li><li><b>Conquer:</b> sort each half (by splitting <em>them</em> too — that's recursion again!).</li><li><b>Combine:</b> merge the two sorted halves by repeatedly taking the smaller front item.</li></ol>
+<p>Splitting keeps halving the list (that's the <code>log n</code> part) and each merge pass touches all <code>n</code> items — giving the famous <code>O(n log n)</code>, the speed limit for comparison sorting.</p>
+<div class="callout"><span class="tag">Quick sort, briefly</span><p>Pick a “pivot” value, shove smaller items to its left and bigger to its right, then sort each side. Usually very fast (<code>O(n log n)</code>), occasionally slow if you pick bad pivots.</p></div>
+<div class="callout key"><span class="tag">One word to remember: stability</span><p>A “stable” sort keeps equal items in their original order. It matters when you sort by one field but want ties to preserve a previous ordering.</p></div>`},
+
+{id:"trees",ch:"Trees & heaps",title:"Trees — data that branches",body:`
+<p class="lede">So far data sat in a line. A tree lets it <b>branch</b>: it starts at a single <b>root</b> and splits into children, which split into their own children. Think family trees, folder structures, or a company org chart.</p>
+${D.tree()}
+<h3>The family vocabulary</h3>
+<ul><li><b>Root</b> — the top node, where everything begins.</li><li><b>Child / parent</b> — a node directly below / above another.</li><li><b>Leaf</b> — a node with no children (the tips).</li><li><b>Binary tree</b> — the common kind where each node has at most two children.</li></ul>
+<p>Trees show up constantly because a lot of real information is naturally hierarchical. Next we'll learn how to visit every node, and then a special ordered tree (the BST).</p>
+<div class="next-links"><a href="#traversals">Traversals →</a><a href="#bst">BST →</a></div>`},
+
+{id:"traversals",ch:"Trees & heaps",title:"Traversals — visiting every node",body:`
+<p class="lede">Once data branches, “loop through it” isn't obvious anymore — which branch first? There are two great strategies, and they're worth knowing cold because they reappear in graphs.</p>
+${D.bfsdfs()}
+<h3>BFS — breadth first (level by level)</h3>
+<p>Visit the root, then <em>all</em> its children, then all <em>their</em> children — like ripples spreading on a pond. BFS uses a <b>queue</b> (first in, first out). It's the natural choice when you want the <em>shortest number of steps</em> to something.</p>
+<h3>DFS — depth first (dive deep, then back up)</h3>
+<p>Follow one branch all the way to a leaf, then back up and try the next branch. DFS uses <b>recursion</b> (or a stack). For binary trees, DFS comes in three flavours depending on <em>when</em> you handle the current node:</p>
+<ul><li><b>Pre-order:</b> me first, then my children.</li><li><b>In-order:</b> left child, me, right child — for a BST this magically visits values in sorted order.</li><li><b>Post-order:</b> children first, me last — great for “clean up from the bottom” tasks.</li></ul>
+<div class="callout key"><span class="tag">Remember</span><p>BFS = queue = level by level = shortest path in unweighted graphs. DFS = recursion/stack = go deep. These two sentences carry you a long way.</p></div>`},
+
+{id:"bst",ch:"Trees & heaps",title:"Binary Search Trees — order with branches",body:`
+<p class="lede">A Binary Search Tree (BST) is a binary tree with one strict rule that makes searching fast: for every node, everything in its <b>left</b> branch is smaller, and everything in its <b>right</b> branch is larger.</p>
+<h3>Why the rule pays off</h3>
+<p>To find a value, start at the root and compare. Smaller? go left. Larger? go right. Each step throws away a whole branch — the same halving magic as binary search, giving <code>O(log n)</code> search on a nicely balanced tree.</p>
+<div class="callout gotcha"><span class="tag">Watch out</span><p>If you insert already-sorted data into a plain BST, it degrades into a straight line (basically a linked list) and search drops to a slow <code>O(n)</code>. Real libraries use “self-balancing” trees (AVL, Red-Black) that quietly re-arrange to stay short. As a beginner, just know the <em>why</em>; the balancing details can wait.</p></div>`},
+
+{id:"heap",ch:"Trees & heaps",title:"Heaps — always grab the smallest",body:`
+<p class="lede">A heap is a tree built for one job: instantly handing you the smallest (or largest) item. Its rule: every parent is smaller than its children — so the minimum always sits right on top.</p>
+${D.heap()}
+<h3>What it's good at</h3>
+<p>Peeking at the top is <code>O(1)</code>. Adding an item or removing the top is <code>O(log n)</code> — the item “bubbles” up or down to its correct spot. This is exactly what a <b>priority queue</b> is: a line where the most important item is always served next, not the first to arrive.</p>
+<div class="callout ex"><span class="tag">Where you'll use it</span><p>“Find the K largest numbers”, “merge K sorted lists”, “always process the closest city next” (that's Dijkstra, coming up in graphs). Whenever you keep asking “what's the smallest/biggest right now?”, reach for a heap.</p></div>`},
+
+{id:"trie",ch:"Trees & heaps",title:"Tries — the autocomplete tree",body:`
+<p class="lede">A trie (say “try”) is a tree for storing words, where each step down represents one letter. Shared prefixes share the same path, which makes prefix questions lightning fast.</p>
+<h3>The idea</h3>
+<p>To store “car”, “cat”, and “cab”, they all share the path <code>c → a</code>, then split into <code>r</code>, <code>t</code>, <code>b</code>. Looking up a word, or checking “does anything start with ‘ca’?”, just means walking letters from the root.</p>
+<div class="callout ex"><span class="tag">Where you'll use it</span><p>Autocomplete, spell-checkers, and “find all words with this prefix” problems. If a task is heavy on word prefixes, the trie is your friend.</p></div>`},
+
+{id:"graphs",ch:"Graphs",title:"Graphs — anything connected",body:`
+<p class="lede">A graph is the most general structure of all: a set of dots (<b>nodes</b>) joined by lines (<b>edges</b>). A tree is actually just a special, tidy graph. Once you see graphs, you spot them everywhere.</p>
+${D.graph()}
+<h3>Real-world graphs</h3>
+<ul><li>Cities (nodes) joined by roads (edges).</li><li>People (nodes) joined by friendships (edges) — a social network.</li><li>Web pages joined by links; tasks joined by “must-happen-before” arrows.</li></ul>
+<h3>Two flavours to know</h3>
+<ul><li><b>Directed vs. undirected:</b> is the edge one-way (a Twitter follow) or two-way (a Facebook friendship)?</li><li><b>Weighted vs. unweighted:</b> do edges carry a number, like the distance of a road? Weights matter for “shortest path” problems.</li></ul>
+<div class="callout"><span class="tag">How we store them</span><p>Usually an <b>adjacency list</b>: for each node, a list of its neighbours. Compact and fast for most problems.</p></div>
+<div class="next-links"><a href="#graph-traversal">Exploring graphs →</a></div>`},
+
+{id:"graph-traversal",ch:"Graphs",title:"Exploring a graph (BFS & DFS again)",body:`
+<p class="lede">Good news: you already know how to explore a graph. It's the exact same <b>BFS</b> and <b>DFS</b> from trees — with one addition.</p>
+<div class="callout key"><span class="tag">The one new thing</span><p>Graphs can have loops, so you must remember where you've already been with a <b>visited set</b>. Before exploring a node, check “have I been here?” — if yes, skip it. Otherwise you'd wander in circles forever.</p></div>
+<h3>What each one gives you</h3>
+<ul><li><b>BFS</b> (queue, level by level) finds the <b>fewest steps</b> between two nodes in an unweighted graph — the shortest path by hop count.</li><li><b>DFS</b> (recursion/stack) is perfect for “can I reach everything?”, counting separate clusters, and detecting cycles.</li></ul>
+<div class="callout ex"><span class="tag">Classic beginner problem</span><p>“Number of islands”: a grid of land and water is secretly a graph. Each unvisited piece of land kicks off a DFS/BFS that floods its whole island; count how many times you had to start. That's the answer.</p></div>`},
+
+{id:"topo-sort",ch:"Graphs",title:"Topological sort — ordering by dependency",body:`
+<p class="lede">Some tasks must happen before others. Topological sort produces a valid order that respects every “must come first” rule.</p>
+<div class="callout"><span class="tag">Getting dressed</span><p>Socks before shoes. Underwear before trousers. There are several valid orders, but shoes-before-socks is never one of them. Topological sort finds one of the valid orders.</p></div>
+<h3>The simple method (Kahn's)</h3>
+<ol><li>Count how many prerequisites each task has (its incoming arrows).</li><li>Start with any task that has <b>zero</b> prerequisites.</li><li>“Complete” it — remove it, and reduce the count for tasks that depended on it.</li><li>Any task that just dropped to zero is now ready. Repeat.</li></ol>
+<div class="callout gotcha"><span class="tag">Watch out</span><p>If tasks form a cycle (A needs B, B needs A), no valid order exists — and topological sort detects exactly that. This is how “can I finish all these courses?” problems get solved.</p></div>`},
+
+{id:"dijkstra",ch:"Graphs",title:"Dijkstra — shortest path with distances",body:`
+<p class="lede">BFS finds the fewest <em>hops</em>, but what if roads have different lengths? Dijkstra's algorithm finds the truly <b>shortest total distance</b> from a start node to everywhere else, when edges have (non-negative) weights.</p>
+<h3>The intuition</h3>
+<p>Keep a “best known distance” to every node, starting at 0 for the start and infinity for the rest. Then repeatedly do the greedy thing: <b>visit the closest unvisited node</b>, and check if going through it gives its neighbours a shorter route. Update if so. A <b>heap</b> (priority queue) efficiently hands you the closest node each time.</p>
+<div class="callout"><span class="tag">Analogy</span><p>Like water spreading from a source through pipes of different lengths — it reaches nearer places first, and you lock in each place's shortest arrival as the flood advances.</p></div>
+<div class="callout gotcha"><span class="tag">Watch out</span><p>Dijkstra assumes no negative-weight edges. If roads can have negative “length” (rare, but it happens in some problems), you need a different tool (Bellman-Ford).</p></div>`},
+
+{id:"union-find",ch:"Graphs",title:"Union-Find — are these two connected?",body:`
+<p class="lede">Union-Find (also called Disjoint Set Union) answers one question incredibly fast: “are these two items in the same group?” — while letting you merge groups on the fly.</p>
+<div class="callout"><span class="tag">Merging friend circles</span><p>Everyone starts in their own tiny circle. When two people become friends, you merge their circles. To check if two people are (directly or indirectly) connected, you just ask “do your circles have the same leader?”</p></div>
+<h3>Two operations</h3>
+<ul><li><b>find(x)</b> — who is the “leader” of x's group?</li><li><b>union(a, b)</b> — merge a's group and b's group into one.</li></ul>
+<p>With two small optimizations (path compression + union by rank) each operation is effectively <code>O(1)</code>. It's the go-to tool for connectivity questions and for detecting cycles while building things like a minimum spanning tree.</p>`},
+
+{id:"dp",ch:"Advanced",title:"Dynamic Programming — recursion with a memory",body:`
+<p class="lede">DP is the topic people fear most, but its core idea is almost embarrassingly simple: <b>don't solve the same small problem twice — write the answer down and reuse it.</b> That's genuinely 90% of it.</p>
+<h3>See the problem first</h3>
+<p>Consider Fibonacci: <code>fib(n) = fib(n−1) + fib(n−2)</code>. Written as plain recursion, look at how much work repeats:</p>
+${D.fib()}
+<p>The red calls are computed over and over. For <code>fib(40)</code>, naive recursion makes over <em>a billion</em> calls — for a number you could pencil out in a minute. That waste is the enemy.</p>
+<h3>The fix: remember answers</h3>
+<p>The moment you compute <code>fib(2)</code>, jot it in a notebook. Next time you need it, read it off instead of recomputing. Now each value is computed exactly once:</p>
+${D.fibMemo()}
+<div class="callout key"><span class="tag">Two ways to store answers</span><p><b>Top-down (memoization):</b> write the natural recursion, but keep a cache; before computing, check “did I already solve this?” <br><b>Bottom-up (tabulation):</b> fill a table starting from the smallest cases up to the answer — no recursion at all. Same results; pick whichever reads clearer.</p></div>
+<h3>When is a problem a DP problem?</h3>
+<p>Two signals, in plain words:</p>
+<ul><li><b>Overlapping subproblems:</b> the same smaller questions keep coming up (like <code>fib(2)</code> above). This is what makes remembering worth it.</li><li><b>Optimal substructure:</b> the best answer to the big problem is built from best answers to smaller ones.</li></ul>
+<div class="callout ex"><span class="tag">Worked example — climbing stairs</span><p>“How many ways to climb <code>n</code> stairs taking 1 or 2 steps at a time?” To reach step <code>n</code>, your last move came either from step <code>n−1</code> (a 1-step) or step <code>n−2</code> (a 2-step). So <code>ways(n) = ways(n−1) + ways(n−2)</code>. Fill a table: ways(1)=1, ways(2)=2, ways(3)=3, ways(4)=5… (it's Fibonacci in disguise!).</p></div>
+<div class="callout"><span class="tag">The recipe for any DP problem</span><p><b>1.</b> Write the answer in terms of smaller answers (find the “relation”).<br><b>2.</b> Confirm the smaller answers repeat.<br><b>3.</b> Store them and reuse — top-down or bottom-up.<br>Master this loop on easy problems (stairs, house robber, coin change) before touching hard ones. DP is a skill built by reps, not by reading.</p></div>`},
+
+{id:"greedy",ch:"Advanced",title:"Greedy — grab the best-looking choice now",body:`
+<p class="lede">A greedy algorithm makes the choice that looks best <em>right now</em> and never reconsiders. When it works, it's simple and fast. The whole art is knowing <b>when</b> it actually works.</p>
+<div class="callout"><span class="tag">Making change</span><p>To give 63¢ with normal coins, grab the biggest coin that fits, repeat: 50, 10, then three 1s. Greedy nails it — with <em>standard</em> coin systems.</p></div>
+<div class="callout gotcha"><span class="tag">Where greedy fails</span><p>Now imagine coins of 1, 3, and 4, and you must make 6. Greedy grabs 4, then 1, then 1 → three coins. But 3 + 3 = 6 uses only <b>two</b>. Greedy chose wrong! That's why some “fewest coins” problems need DP instead. The lesson: greedy is only correct when you can <em>prove</em> the local-best choice is always safe.</p></div>
+<p>Plenty of famous algorithms are greedy done right — Dijkstra, and the minimum-spanning-tree algorithms (Prim, Kruskal). For contest and interview problems, always pause and ask: “could grabbing the best-now choice ever paint me into a corner?”</p>
+<div class="callout"><span class="tag">You've reached the end 🎉</span><p>That's the core of DSA. From here it's practice — head back to the roadmap, tick what you've learned, and start solving. Understanding beats memorizing every time.</p></div>`},
+];
+
+/* ---------- render ---------- */
+const chapters = [];
+L.forEach(l => { if (!chapters.includes(l.ch)) chapters.push(l.ch); });
+
+const lessonsEl = document.getElementById("lessons");
+lessonsEl.innerHTML = L.map(l =>
+  `<section class="lesson" id="${l.id}"><p class="kicker">${l.ch}</p><h2>${l.title}</h2>${l.body}</section>`
+).join("");
+
+const tocEl = document.getElementById("toc");
+let toc = "";
+chapters.forEach(ch => {
+  toc += `<div class="ch">${ch}</div>`;
+  L.filter(l=>l.ch===ch).forEach(l => { toc += `<a href="#${l.id}" data-id="${l.id}">${l.title.split(" — ")[0]}</a>`; });
+});
+tocEl.innerHTML = toc;
+
+// interactive widgets
+initRecursion();
+initBinary();
+
+// mobile TOC toggle
+const tocToggle = document.getElementById("tocToggle");
+tocToggle.addEventListener("click", () => tocEl.classList.toggle("open"));
+tocEl.addEventListener("click", e => { if (e.target.tagName==="A") tocEl.classList.remove("open"); });
+
+// scroll: progress bar + active TOC highlight
+const bar = document.getElementById("bar");
+const tocLinks = Array.from(tocEl.querySelectorAll("a"));
+const sections = L.map(l => document.getElementById(l.id));
+function onScroll(){
+  const h = document.documentElement;
+  const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+  bar.style.width = (scrolled*100).toFixed(1) + "%";
+  let current = sections[0].id;
+  for (const s of sections){ if (s.getBoundingClientRect().top <= 120) current = s.id; }
+  tocLinks.forEach(a => a.classList.toggle("active", a.dataset.id===current));
+}
+window.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* ---------- recursion stepper ---------- */
+function initRecursion(){
+  const svg = document.getElementById("recSvg"); if(!svg) return;
+  const S=[
+    {fr:[["fact(4)","= 4 × fact(3)",0]],note:"We want <b>fact(4)</b>. But first we need fact(3), so we pause and call it.",ph:"Going DOWN ↓"},
+    {fr:[["fact(4)","= 4 × fact(3)",0],["fact(3)","= 3 × fact(2)",0]],note:"fact(3) needs fact(2). Pause again. The unfinished calls are stacking up.",ph:"Going DOWN ↓"},
+    {fr:[["fact(4)","= 4 × fact(3)",0],["fact(3)","= 3 × fact(2)",0],["fact(2)","= 2 × fact(1)",0]],note:"fact(2) needs fact(1). One more call…",ph:"Going DOWN ↓"},
+    {fr:[["fact(4)","= 4 × fact(3)",0],["fact(3)","= 3 × fact(2)",0],["fact(2)","= 2 × fact(1)",0],["fact(1)","= 1  ← base case!",2]],note:"<b>Base case reached!</b> fact(1) is just 1 — no more calls. Now answers climb back <b>up</b>.",ph:"Bottom ✓"},
+    {fr:[["fact(4)","= 4 × fact(3)",0],["fact(3)","= 3 × fact(2)",0],["fact(2)","= 2 × 1 = 2",1]],note:"fact(1) gave 1, so fact(2) = 2 × 1 = <b>2</b>. This frame is done and pops off.",ph:"Climbing UP ↑"},
+    {fr:[["fact(4)","= 4 × fact(3)",0],["fact(3)","= 3 × 2 = 6",1]],note:"fact(2) gave 2, so fact(3) = 3 × 2 = <b>6</b>.",ph:"Climbing UP ↑"},
+    {fr:[["fact(4)","= 4 × 6 = 24",1]],note:"fact(3) gave 6, so fact(4) = 4 × 6 = <b>24</b>. Down, then up — that's recursion. 🎉",ph:"Done ✓"},
+  ];
+  let i=0;
+  const note=document.getElementById("recNote"),count=document.getElementById("recCount"),phase=document.getElementById("recPhase"),prev=document.getElementById("recPrev"),next=document.getElementById("recNext");
+  function draw(){
+    const st=S[i],fr=st.fr,bw=210,bh=30,x=(340-bw)/2,gap=4,baseY=180;let b="";
+    fr.forEach((f,k)=>{const y=baseY-k*(bh+gap);const[label,expr,kind]=f;const stroke=kind===2?"var(--done)":kind===1?"var(--accent)":"var(--line)";const fill=kind===2?"color-mix(in srgb,var(--done) 12%,transparent)":kind===1?"var(--accent-soft)":"var(--surface)";b+=box(x,y,bw,bh,fill,stroke,7)+txt(x+12,y+bh/2,label,{size:12,w:700,anchor:"start"})+txt(x+82,y+bh/2,expr,{size:11.5,anchor:"start",fill:"var(--ink-soft)"});});
+    b+=txt(170,16,"call stack",{size:10,fill:"var(--ink-faint)"});
+    svg.innerHTML=b;note.innerHTML=st.note;phase.textContent=st.ph;count.textContent=(i+1)+" / "+S.length;prev.disabled=i===0;next.disabled=i===S.length-1;
+  }
+  prev.onclick=()=>{if(i>0){i--;draw();}};next.onclick=()=>{if(i<S.length-1){i++;draw();}};draw();
+}
+
+/* ---------- binary search stepper ---------- */
+function initBinary(){
+  const svg=document.getElementById("bsSvg"); if(!svg) return;
+  const arr=[2,5,8,12,16,23,38,56,72,91],target=23,steps=[];
+  let lo=0,hi=arr.length-1;
+  while(lo<=hi){const mid=Math.floor((lo+hi)/2);let note,found=false;
+    if(arr[mid]===target){note=`Middle is <b>${arr[mid]}</b> — that's our target ${target}. <b>Found it</b> at index ${mid}! 🎉`;found=true;}
+    else if(arr[mid]<target){note=`Middle is ${arr[mid]}, smaller than ${target}. The answer must be to the right — <b>drop the left half</b>.`;}
+    else{note=`Middle is ${arr[mid]}, bigger than ${target}. The answer must be to the left — <b>drop the right half</b>.`;}
+    steps.push({lo,hi,mid,note,found}); if(found)break;
+    if(arr[mid]<target)lo=mid+1;else hi=mid-1;}
+  let i=0;const note=document.getElementById("bsNote"),count=document.getElementById("bsCount"),prev=document.getElementById("bsPrev"),next=document.getElementById("bsNext");
+  function draw(){const st=steps[i],bw=32,gap=6,x0=24,y=30;let b="";
+    arr.forEach((v,k)=>{const x=x0+k*(bw+gap);const alive=k>=st.lo&&k<=st.hi;const isMid=k===st.mid;
+      const fill=isMid?(st.found?"color-mix(in srgb,var(--done) 18%,transparent)":"var(--accent-soft)"):alive?"var(--surface)":"var(--surface-2)";
+      const stroke=isMid?(st.found?"var(--done)":"var(--accent)"):"var(--line)";
+      b+=box(x,y,bw,38,fill,stroke,6)+txt(x+bw/2,y+19,v,{w:600,size:12,fill:alive?"var(--ink)":"var(--ink-faint)"});
+      if(k===st.lo)b+=txt(x+bw/2,y+54,"lo",{size:10,fill:"var(--wip)",w:700});
+      if(k===st.hi)b+=txt(x+bw/2,y+(k===st.lo?66:54),"hi",{size:10,fill:"var(--pink)",w:700});
+      if(isMid)b+=txt(x+bw/2,y-10,"mid",{size:10,fill:"var(--accent)",w:700});});
+    svg.innerHTML=b;note.innerHTML=st.note;count.textContent=(i+1)+" / "+steps.length;prev.disabled=i===0;next.disabled=i===steps.length-1;}
+  prev.onclick=()=>{if(i>0){i--;draw();}};next.onclick=()=>{if(i<steps.length-1){i++;draw();}};draw();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+<title>Code Lab — DSA Implementations</title>
+<style>
+  :root{
+    --bg:#f6f7fb;--surface:#fff;--surface-2:#eef0f7;--ink:#1a1d2b;--ink-soft:#4d5268;--ink-faint:#8b8fa6;
+    --line:#e2e5ef;--accent:#5b6ee8;--accent-soft:#eaecfd;--done:#34c77b;--pink:#d9568f;--red:#e05a5a;--teal:#1aa89c;--amber:#c98a2b;
+    --code-bg:#fbfbfe;
+    --shadow:0 1px 2px rgba(26,29,43,.04),0 4px 16px rgba(26,29,43,.05);
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){:root{
+    --bg:#0f1118;--surface:#171a24;--surface-2:#1e2130;--ink:#eef0f7;--ink-soft:#b3b7cc;--ink-faint:#6b7089;
+    --line:#262a3a;--accent:#8291ff;--accent-soft:#22263c;--done:#3ddb89;--pink:#ef7fb2;--red:#f0736f;--teal:#43c8ba;--amber:#e3ab5c;
+    --code-bg:#12141c;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}}
+  :root[data-theme="light"]{--bg:#f6f7fb;--surface:#fff;--surface-2:#eef0f7;--ink:#1a1d2b;--ink-soft:#4d5268;--ink-faint:#8b8fa6;--line:#e2e5ef;--accent:#5b6ee8;--accent-soft:#eaecfd;--done:#34c77b;--pink:#d9568f;--red:#e05a5a;--teal:#1aa89c;--amber:#c98a2b;--code-bg:#fbfbfe;--shadow:0 1px 2px rgba(26,29,43,.04),0 4px 16px rgba(26,29,43,.05);}
+  :root[data-theme="dark"]{--bg:#0f1118;--surface:#171a24;--surface-2:#1e2130;--ink:#eef0f7;--ink-soft:#b3b7cc;--ink-faint:#6b7089;--line:#262a3a;--accent:#8291ff;--accent-soft:#22263c;--done:#3ddb89;--pink:#ef7fb2;--red:#f0736f;--teal:#43c8ba;--amber:#e3ab5c;--code-bg:#12141c;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  p{color:var(--ink-soft);}
+  b,strong{color:var(--ink);font-weight:640;}
+
+  header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .head-inner{max-width:1180px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:12px;}
+  .back{font-family:var(--mono);font-size:12px;color:var(--accent);text-decoration:none;border:1px solid var(--line);
+    border-radius:8px;padding:6px 11px;transition:all .15s;white-space:nowrap;}
+  .back:hover{border-color:var(--accent);background:var(--accent-soft);}
+  .head-title{font-size:14px;font-weight:640;letter-spacing:-.01em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .nav-toggle{display:none;font-family:var(--mono);font-size:12px;color:var(--ink-soft);background:var(--surface);
+    border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer;}
+
+  .layout{max-width:1180px;margin:0 auto;padding:0 22px;display:grid;grid-template-columns:250px 1fr;gap:34px;}
+  nav.side{position:sticky;top:64px;align-self:start;max-height:calc(100vh - 88px);overflow-y:auto;padding:24px 0 40px;}
+  nav.side .grp{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin:18px 0 6px;}
+  nav.side .grp:first-child{margin-top:2px;}
+  nav.side a{display:block;font-size:13px;color:var(--ink-soft);text-decoration:none;padding:5px 11px;border-radius:7px;
+    border-left:2px solid transparent;transition:all .12s;font-family:var(--mono);}
+  nav.side a:hover{color:var(--ink);background:var(--surface-2);}
+  nav.side a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-soft);font-weight:600;}
+
+  main{padding:26px 0 90px;min-width:0;}
+  .hero{margin-bottom:26px;}
+  .hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0;}
+  .hero h1{font-size:27px;letter-spacing:-.02em;margin:.2em 0 .3em;text-wrap:balance;}
+  .hero p{font-size:15.5px;max-width:64ch;}
+
+  .fileview{scroll-margin-top:74px;margin-bottom:14px;}
+  .fv-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:8px;}
+  .fv-title h2{font-size:19px;margin:0;letter-spacing:-.01em;font-family:var(--mono);}
+  .fv-path{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:2px;}
+  .fv-desc{font-size:14.5px;color:var(--ink-soft);margin:6px 0 12px;}
+  .copy{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+    border-radius:8px;padding:6px 12px;cursor:pointer;transition:all .15s;white-space:nowrap;}
+  .copy:hover{border-color:var(--accent);color:var(--accent);}
+  .copy.ok{border-color:var(--done);color:var(--done);}
+
+  .cmd{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);border:1px solid var(--line);
+    border-radius:9px;padding:9px 13px;margin:0 0 12px;color:var(--ink-soft);overflow-x:auto;white-space:nowrap;}
+  .cmd .p{color:var(--accent);}
+
+  .code-wrap{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+  .code-scroll{overflow-x:auto;}
+  pre{margin:0;font-family:var(--mono);font-size:13px;line-height:1.65;}
+  .ln{display:flex;}
+  .ln .n{flex:0 0 44px;text-align:right;padding:0 14px 0 0;color:var(--ink-faint);opacity:.55;user-select:none;
+    border-right:1px solid var(--line);margin-right:14px;}
+  .ln .c{white-space:pre;padding-right:20px;}
+  .ln:first-child .c{padding-top:12px;}
+  .ln:last-child .c{padding-bottom:12px;}
+  .ln:first-child .n{padding-top:12px;}
+  .ln:last-child .n{padding-bottom:12px;}
+  .tok-com{color:var(--ink-faint);font-style:italic;}
+  .tok-str{color:var(--teal);}
+  .tok-kw{color:var(--accent);font-weight:600;}
+  .tok-type{color:var(--pink);}
+  .tok-num{color:var(--amber);}
+  .tok-pre{color:var(--red);}
+  .tok-todo{color:var(--red);font-weight:700;font-style:normal;background:color-mix(in srgb,var(--red) 12%,transparent);border-radius:3px;padding:0 3px;}
+
+  footer{max-width:1180px;margin:40px auto 0;padding:0 22px 40px;text-align:center;font-size:13px;color:var(--ink-faint);}
+  footer a{color:var(--accent);}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:0;}
+    nav.side{position:static;max-height:none;padding:0;margin-top:10px;display:none;}
+    nav.side.open{display:block;padding-bottom:16px;}
+    .nav-toggle{display:inline-block;}
+    main{padding-top:18px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="head-inner">
+    <a class="back" href="index.html">‹ Roadmap</a>
+    <a class="back" href="lessons.html">📖 Lessons</a>
+    <span class="head-title">Code Lab — C++ implementations</span>
+    <button class="nav-toggle" id="navToggle">Files</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="side" id="side"></nav>
+  <main>
+    <div class="hero">
+      <p class="eyebrow">Build it yourself</p>
+      <h1>The Code Lab</h1>
+      <p>Every data structure and algorithm from the roadmap, as a C++ <b>starter file</b> — a working skeleton with the tricky parts left as <code style="font-family:var(--mono);background:var(--surface-2);padding:1px 5px;border-radius:4px">// TODO</code> for you to fill in. Read the complexity notes, implement the bodies, then run the built-in <code style="font-family:var(--mono);background:var(--surface-2);padding:1px 5px;border-radius:4px">main()</code> to check yourself. Learning by doing beats reading every time.</p>
+    </div>
+    <div id="files"></div>
+  </main>
+</div>
+<footer>These mirror the <code>implementations/</code> folder in the repo · <a href="index.html">back to the roadmap</a></footer>
+
+<script src="code-data.js"></script>
+<script>
+const DATA = (window.CODE_DATA || {files:[], readme:""});
+
+/* ---------- minimal, dependency-free C++ highlighter (per line) ---------- */
+const KW = new Set(["return","if","else","for","while","do","switch","case","break","continue","default",
+  "using","namespace","struct","class","public","private","protected","const","static","new","delete",
+  "true","false","nullptr","this","template","typename","sizeof","explicit","virtual","override","goto"]);
+const TYPE = new Set(["int","long","short","char","bool","void","float","double","unsigned","signed","auto",
+  "vector","string","pair","map","unordered_map","set","unordered_set","queue","stack","priority_queue",
+  "deque","array","size_t","INT_MIN","INT_MAX","LLONG_MAX"]);
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function highlight(line){
+  // preprocessor directive
+  if(/^\s*#/.test(line)) return `<span class="tok-pre">${esc(line)}</span>`;
+  let out="", i=0, n=line.length;
+  while(i<n){
+    const ch=line[i];
+    // line comment
+    if(ch==="/" && line[i+1]==="/"){
+      const rest=line.slice(i);
+      const withTodo=esc(rest).replace(/\b(TODO|FIXME)\b/g,'<span class="tok-todo">$1</span>');
+      out+=`<span class="tok-com">${withTodo}</span>`; break;
+    }
+    // string or char literal
+    if(ch==='"' || ch==="'"){
+      let j=i+1;
+      while(j<n && line[j]!==ch){ if(line[j]==="\\") j++; j++; }
+      out+=`<span class="tok-str">${esc(line.slice(i,Math.min(j+1,n)))}</span>`;
+      i=j+1; continue;
+    }
+    // number
+    if(/[0-9]/.test(ch) && !/[A-Za-z_]/.test(line[i-1]||"")){
+      let j=i; while(j<n && /[0-9a-fx.]/i.test(line[j])) j++;
+      out+=`<span class="tok-num">${esc(line.slice(i,j))}</span>`; i=j; continue;
+    }
+    // identifier / keyword
+    if(/[A-Za-z_]/.test(ch)){
+      let j=i; while(j<n && /[A-Za-z0-9_]/.test(line[j])) j++;
+      const word=line.slice(i,j);
+      if(KW.has(word)) out+=`<span class="tok-kw">${word}</span>`;
+      else if(TYPE.has(word)) out+=`<span class="tok-type">${word}</span>`;
+      else out+=esc(word);
+      i=j; continue;
+    }
+    out+=esc(ch); i++;
+  }
+  return out;
+}
+
+function renderCode(code){
+  const lines=code.replace(/\n$/,"").split("\n");
+  return `<div class="code-scroll"><pre>`+lines.map((ln,k)=>
+    `<div class="ln"><span class="n">${k+1}</span><span class="c">${highlight(ln)||"&nbsp;"}</span></div>`
+  ).join("")+`</pre></div>`;
+}
+
+/* ---------- build sidebar + file views ---------- */
+const sideEl=document.getElementById("side");
+const filesEl=document.getElementById("files");
+
+function anchorFor(path){ return path; } // hash is the raw relative path
+
+let sideHtml="", filesHtml="", lastFolder=null;
+DATA.files.forEach(f=>{
+  if(f.folderLabel!==lastFolder){ sideHtml+=`<div class="grp">${f.folderLabel}</div>`; lastFolder=f.folderLabel; }
+  sideHtml+=`<a href="#${anchorFor(f.path)}" data-path="${f.path}">${f.name}</a>`;
+  const cmd=`g++ -std=c++17 -Wall implementations/${f.path} -o /tmp/out &amp;&amp; /tmp/out`;
+  filesHtml+=`<section class="fileview" id="${anchorFor(f.path)}">
+    <div class="fv-head">
+      <div class="fv-title"><h2>${f.name}</h2><div class="fv-path">implementations/${f.path}</div></div>
+      <button class="copy" data-path="${f.path}">Copy code</button>
+    </div>
+    ${f.desc?`<p class="fv-desc">${f.desc}</p>`:""}
+    <div class="cmd"><span class="p">$</span> ${cmd}</div>
+    <div class="code-wrap">${renderCode(f.code)}</div>
+  </section>`;
+});
+sideEl.innerHTML=sideHtml;
+filesEl.innerHTML=filesHtml;
+
+/* copy buttons */
+const byPath={}; DATA.files.forEach(f=>byPath[f.path]=f.code);
+filesEl.addEventListener("click",e=>{
+  const btn=e.target.closest(".copy"); if(!btn) return;
+  const code=byPath[btn.dataset.path]||"";
+  navigator.clipboard.writeText(code).then(()=>{
+    const old=btn.textContent; btn.textContent="Copied ✓"; btn.classList.add("ok");
+    setTimeout(()=>{btn.textContent=old; btn.classList.remove("ok");},1400);
+  }).catch(()=>{ btn.textContent="Copy failed"; });
+});
+
+/* mobile nav toggle */
+const navToggle=document.getElementById("navToggle");
+navToggle.addEventListener("click",()=>sideEl.classList.toggle("open"));
+sideEl.addEventListener("click",e=>{ if(e.target.tagName==="A") sideEl.classList.remove("open"); });
+
+/* active-link highlight on scroll */
+const links=Array.from(sideEl.querySelectorAll("a"));
+const sections=DATA.files.map(f=>document.getElementById(anchorFor(f.path)));
+function onScroll(){
+  let cur=sections.length?sections[0].id:null;
+  for(const s of sections){ if(s && s.getBoundingClientRect().top<=120) cur=s.id; }
+  links.forEach(a=>a.classList.toggle("active",a.dataset.path===cur));
+}
+window.addEventListener("scroll",onScroll,{passive:true});
+onScroll();
+
+/* if arriving with a hash, browser scrolls automatically; ensure highlight after load */
+window.addEventListener("load",onScroll);
+</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
+<title>DSA Roadmap</title>
+<style>
+  :root {
+    --bg:#f6f7fb; --surface:#fff; --surface-2:#eef0f7; --ink:#1a1d2b; --ink-soft:#565b73;
+    --ink-faint:#8b8fa6; --line:#e2e5ef; --accent:#5b6ee8; --accent-soft:#eaecfd; --done:#34c77b;
+    --wip:#e8a33d; --track:#e2e5ef;
+    --shadow:0 1px 2px rgba(26,29,43,.04),0 4px 16px rgba(26,29,43,.05);
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){:root{
+    --bg:#0f1118;--surface:#171a24;--surface-2:#1e2130;--ink:#eef0f7;--ink-soft:#a7abc2;--ink-faint:#6b7089;
+    --line:#262a3a;--accent:#8291ff;--accent-soft:#22263c;--done:#3ddb89;--wip:#eeb45c;--track:#2b3042;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}}
+  :root[data-theme="light"]{--bg:#f6f7fb;--surface:#fff;--surface-2:#eef0f7;--ink:#1a1d2b;--ink-soft:#565b73;--ink-faint:#8b8fa6;--line:#e2e5ef;--accent:#5b6ee8;--accent-soft:#eaecfd;--done:#34c77b;--wip:#e8a33d;--track:#e2e5ef;--shadow:0 1px 2px rgba(26,29,43,.04),0 4px 16px rgba(26,29,43,.05);}
+  :root[data-theme="dark"]{--bg:#0f1118;--surface:#171a24;--surface-2:#1e2130;--ink:#eef0f7;--ink-soft:#a7abc2;--ink-faint:#6b7089;--line:#262a3a;--accent:#8291ff;--accent-soft:#22263c;--done:#3ddb89;--wip:#eeb45c;--track:#2b3042;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.35);}
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:800px;margin:0 auto;padding:0 20px 80px;}
+  p{color:var(--ink-soft);}
+  b,strong{color:var(--ink);font-weight:640;}
+
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+  .head-inner{max-width:800px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;}
+  .titles{flex:1;min-width:0;}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 2px;}
+  h1{font-size:19px;margin:0;letter-spacing:-.01em;font-weight:680;}
+  .sub{color:var(--ink-faint);font-size:12px;margin-top:1px;}
+  .ring-wrap{display:flex;align-items:center;gap:11px;}
+  .ring-label{text-align:right;}
+  .ring-pct{font-family:var(--mono);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .ring-cap{font-size:10px;color:var(--ink-faint);letter-spacing:.05em;text-transform:uppercase;}
+
+  .lead{margin:32px 0 8px;}
+  .lead h2{font-size:24px;letter-spacing:-.02em;margin:.1em 0 .3em;text-wrap:balance;}
+  .lead p{font-size:15px;max-width:62ch;}
+  .book-cta{display:inline-flex;align-items:center;gap:9px;margin-top:16px;text-decoration:none;
+    background:var(--accent);color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:10px;
+    transition:transform .12s,box-shadow .2s;box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 40%,transparent);}
+  .book-cta:hover{transform:translateY(-1px);}
+  .book-cta .em{font-size:16px;}
+  .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+  .cta-row .book-cta{margin-top:0;}
+  .book-cta.alt{background:var(--surface);color:var(--accent);border:1px solid var(--line);box-shadow:none;}
+  .book-cta.alt:hover{border-color:var(--accent);background:var(--accent-soft);}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:20px;}
+  .chip{font-family:var(--mono);font-size:11px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);
+    border-radius:999px;padding:4px 11px;display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:8px;height:8px;border-radius:50%;}
+  .reset{font-family:var(--mono);font-size:11px;color:var(--ink-faint);background:none;border:1px solid var(--line);
+    border-radius:7px;padding:5px 10px;cursor:pointer;transition:all .15s;}
+  .reset:hover{color:var(--ink);border-color:var(--ink-faint);}
+
+  .phase{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:13px;
+    box-shadow:var(--shadow);overflow:hidden;transition:border-color .2s;}
+  .phase.complete{border-color:color-mix(in srgb,var(--done) 45%,var(--line));}
+  .p-head{display:flex;align-items:center;gap:15px;width:100%;padding:17px 20px;background:none;border:0;
+    cursor:pointer;text-align:left;color:inherit;font-family:inherit;}
+  .p-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+  .pnum{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);
+    width:38px;height:38px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;}
+  .complete .pnum{color:var(--done);background:color-mix(in srgb,var(--done) 16%,transparent);}
+  .p-titles{flex:1;min-width:0;}
+  .p-titles h3{font-size:15.5px;margin:0;font-weight:650;letter-spacing:-.006em;}
+  .p-meta{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:1px;}
+  .mini-count{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+  .chev{color:var(--ink-faint);transition:transform .22s ease;flex-shrink:0;}
+  .phase[data-open="1"] .chev{transform:rotate(90deg);}
+
+  .p-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .26s ease;}
+  .phase[data-open="1"] .p-body{grid-template-rows:1fr;}
+  .p-clip{overflow:hidden;min-height:0;}
+  .p-pad{padding:2px 20px 20px;}
+
+  .topic{margin-top:20px;}
+  .topic:first-child{margin-top:8px;}
+  .topic-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-top:15px;
+    border-top:1px dashed var(--line);margin-bottom:9px;}
+  .topic:first-child .topic-head{border-top:0;padding-top:0;}
+  .topic-name{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin:0;}
+  .topic-actions{display:inline-flex;gap:6px;flex-shrink:0;}
+  a.learn{font-size:12px;color:var(--accent);text-decoration:none;background:var(--accent-soft);border-radius:7px;
+    padding:3px 9px;white-space:nowrap;transition:all .15s;font-weight:600;}
+  a.learn:hover{background:var(--accent);color:#fff;}
+  a.codelink{font-size:12px;color:var(--teal,#1aa89c);text-decoration:none;background:color-mix(in srgb,var(--teal,#1aa89c) 12%,transparent);
+    border-radius:7px;padding:3px 9px;white-space:nowrap;transition:all .15s;font-weight:600;}
+  a.codelink:hover{background:var(--teal,#1aa89c);color:#fff;}
+  ul.items{list-style:none;margin:0;padding:0;}
+  li.item{padding:2px 0;}
+  li.item label{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px;color:var(--ink-soft);}
+  li.item input{position:absolute;opacity:0;width:0;height:0;}
+  .box{width:17px;height:17px;border-radius:5px;border:1.5px solid var(--line);flex-shrink:0;margin-top:3px;
+    display:grid;place-items:center;transition:all .15s;background:var(--surface);}
+  li.item input:checked + label .box{background:var(--done);border-color:var(--done);}
+  .box svg{opacity:0;transition:opacity .12s;}
+  li.item input:checked + label .box svg{opacity:1;}
+  li.item input:checked + label .txt{color:var(--ink-faint);text-decoration:line-through;}
+  label:focus-within .box{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .practice{margin-top:11px;display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;}
+  .practice .plabel{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);}
+  a.prob{font-size:12.5px;color:var(--accent);text-decoration:none;background:var(--accent-soft);border-radius:6px;
+    padding:2px 8px;transition:all .15s;white-space:nowrap;}
+  a.prob:hover{background:var(--accent);color:#fff;}
+
+  .sec-title{margin:42px 0 4px;}
+  .sec-title h2{font-size:20px;letter-spacing:-.015em;margin:.1em 0 .2em;}
+  .sec-title p{font-size:14.5px;max-width:60ch;}
+  .patterns-note{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;
+    box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:6px;}
+  .patterns-note p{margin:0;font-size:14px;}
+
+  footer{margin-top:44px;text-align:center;font-size:12.5px;color:var(--ink-faint);}
+  footer code{font-family:var(--mono);background:var(--surface-2);padding:1px 6px;border-radius:5px;}
+
+  @media (max-width:560px){.ring-cap,.sub{display:none;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-inner">
+    <div class="titles">
+      <p class="eyebrow">Learning Curve</p>
+      <h1>DSA Roadmap</h1>
+      <div class="sub">Your path &amp; checklist · progress saved here</div>
+    </div>
+    <div class="ring-wrap">
+      <div class="ring-label">
+        <div class="ring-pct" id="pct">0%</div>
+        <div class="ring-cap"><span id="doneCount">0</span>/<span id="totalCount">0</span> done</div>
+      </div>
+      <svg width="46" height="46" viewBox="0 0 48 48">
+        <circle cx="24" cy="24" r="20" fill="none" stroke="var(--track)" stroke-width="5"/>
+        <circle cx="24" cy="24" r="20" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"
+          transform="rotate(-90 24 24)" id="mainArc" stroke-dasharray="125.6" stroke-dashoffset="125.6"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="lead">
+    <h2>Work top to bottom. Learn, then check it off.</h2>
+    <p>This is your map — the phases, the topics, and the practice problems, kept deliberately clean. Each topic has a <b>Learn</b> button that opens a full, beginner-friendly lesson with pictures and worked examples. New here? Start with the lessons book, then come back and tick things off.</p>
+    <div class="cta-row">
+      <a class="book-cta" href="lessons.html" target="_blank" rel="noopener"><span class="em">📖</span> Open the lessons book</a>
+      <a class="book-cta alt" href="code.html" target="_blank" rel="noopener"><span class="em">💻</span> Browse the Code Lab</a>
+    </div>
+    <div class="toolbar">
+      <span class="chip"><span class="dot" style="background:var(--done)"></span>Done</span>
+      <span class="chip"><span class="dot" style="background:var(--wip)"></span>In progress</span>
+      <span class="chip"><span class="dot" style="background:var(--track)"></span>Not started</span>
+      <button class="reset" id="resetBtn" style="margin-left:auto">Reset progress</button>
+    </div>
+  </div>
+
+  <div id="phases"></div>
+
+  <div class="sec-title"><h2>The 15 core patterns</h2>
+    <p>Most problems are re-skins of about 15 ideas. Each is explained with an analogy and steps in the lessons book.</p></div>
+  <div class="patterns-note">
+    <p>Two Pointers · Sliding Window · Fast &amp; Slow · Merge Intervals · Binary Search · BFS/DFS · Backtracking · Top-K · Monotonic Stack · Union-Find · Topological Sort · Prefix Sum · DP · Greedy · Bit Manipulation</p>
+    <a class="learn" href="lessons.html" target="_blank" rel="noopener">Read the patterns →</a>
+  </div>
+
+  <footer>
+    Companion to <code>ROADMAP.md</code> · build each structure yourself in <code>implementations/</code><br>
+    Progress is saved in this browser only.
+  </footer>
+</div>
+
+<script>
+const LESSONS = "lessons.html";
+const CODE = "code.html";
+// topic (by its lesson anchor) -> representative C++ starter file in the Code Lab
+const CODE_MAP = {
+  "arrays":"arrays/two_pointers.cpp",
+  "linked-list":"linked_list/singly_linked_list.cpp",
+  "stack":"stack_queue/stack.cpp",
+  "binary-search":"searching/binary_search.cpp",
+  "sorting":"sorting/sorts.cpp",
+  "recursion":"recursion/backtracking.cpp",
+  "trees":"trees/bst.cpp",
+  "heap":"heap/min_heap.cpp",
+  "trie":"trie/trie.cpp",
+  "graphs":"graph/graph.cpp",
+  "topo-sort":"graph/dijkstra.cpp",
+  "union-find":"graph/union_find.cpp",
+  "dp":"dp/dp_basics.cpp",
+};
+const CHECK = '<svg width="11" height="11" viewBox="0 0 12 12"><path d="M2.5 6.2l2.2 2.3 4.8-5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+// each topic: name, learn anchor, items[], links[]
+const DATA = [
+  { n:"0", title:"Getting Ready", meta:"Week 1", topics:[
+    { name:"Warm-up", learn:"intro", items:[
+      "Pick one language and stick with it",
+      "Variables, loops, if/else, functions",
+      "Lists/arrays, strings, and a map (key → value)",
+      "How to run and debug a small program",
+    ]},
+  ]},
+  { n:"1", title:"Big-O: Measuring Speed", meta:"Week 1", topics:[
+    { name:"Big-O basics", learn:"bigo", items:[
+      "What Big-O means (growth, not seconds)",
+      "O(1), O(log n), O(n), O(n log n), O(n²)",
+      "Reading loops: single vs. nested",
+      "Time vs. space (memory) cost",
+      "Best / average / worst case",
+    ]},
+  ]},
+  { n:"2", title:"Linear Data Structures", meta:"Weeks 2–3", topics:[
+    { name:"Arrays & Strings", learn:"arrays", items:["Traverse, insert, delete","Two-pointer technique","Sliding window","Prefix sums"],
+      links:[["Two Sum","https://leetcode.com/problems/two-sum/"],["Best Time to Buy/Sell","https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"],["Longest Substring w/o Repeat","https://leetcode.com/problems/longest-substring-without-repeating-characters/"]]},
+    { name:"Linked Lists", learn:"linked-list", items:["Build, insert, delete","Reverse a list","Fast & slow pointers"],
+      links:[["Reverse Linked List","https://leetcode.com/problems/reverse-linked-list/"],["Linked List Cycle","https://leetcode.com/problems/linked-list-cycle/"]]},
+    { name:"Stacks & Queues", learn:"stack", items:["Stack (push/pop)","Queue & deque","Monotonic stack","Balanced parentheses"],
+      links:[["Valid Parentheses","https://leetcode.com/problems/valid-parentheses/"],["Daily Temperatures","https://leetcode.com/problems/daily-temperatures/"]]},
+    { name:"Hashing", learn:"hashing", items:["Hash maps & sets","Frequency counting","Grouping problems"],
+      links:[["Group Anagrams","https://leetcode.com/problems/group-anagrams/"],["Top K Frequent","https://leetcode.com/problems/top-k-frequent-elements/"]]},
+  ]},
+  { n:"3", title:"Recursion, Searching & Sorting", meta:"Week 4", topics:[
+    { name:"Recursion & Backtracking", learn:"recursion", items:["Base case + smaller call","Trace the call stack","Subsets, permutations","Backtracking"],
+      links:[["Subsets","https://leetcode.com/problems/subsets/"],["Permutations","https://leetcode.com/problems/permutations/"],["Combination Sum","https://leetcode.com/problems/combination-sum/"]]},
+    { name:"Searching", learn:"binary-search", items:["Binary search","Binary search on the answer","Rotated array variant"],
+      links:[["Binary Search","https://leetcode.com/problems/binary-search/"],["Koko Eating Bananas","https://leetcode.com/problems/koko-eating-bananas/"]]},
+    { name:"Sorting", learn:"sorting", items:["Merge sort (divide & conquer)","Quick sort","When each sort fits"],
+      links:[["Sort Colors","https://leetcode.com/problems/sort-colors/"],["Merge Intervals","https://leetcode.com/problems/merge-intervals/"]]},
+  ]},
+  { n:"4", title:"Trees & Heaps", meta:"Weeks 5–6", topics:[
+    { name:"Trees", learn:"trees", items:["Tree words: root, child, leaf","Traversals: pre/in/post","Level-order (BFS)","Binary Search Trees","Lowest Common Ancestor"],
+      links:[["Invert Binary Tree","https://leetcode.com/problems/invert-binary-tree/"],["Level Order","https://leetcode.com/problems/binary-tree-level-order-traversal/"],["Validate BST","https://leetcode.com/problems/validate-binary-search-tree/"]]},
+    { name:"Heaps / Priority Queues", learn:"heap", items:["Min-heap / max-heap","push, pop, heapify","Top-K problems","Two-heap median trick"],
+      links:[["Kth Largest","https://leetcode.com/problems/kth-largest-element-in-an-array/"],["Merge K Lists","https://leetcode.com/problems/merge-k-sorted-lists/"]]},
+    { name:"Tries", learn:"trie", items:["Prefix tree insert/search","Autocomplete problems"],
+      links:[["Implement Trie","https://leetcode.com/problems/implement-trie-prefix-tree/"]]},
+  ]},
+  { n:"5", title:"Graphs", meta:"Weeks 7–8", topics:[
+    { name:"Foundations & traversal", learn:"graphs", items:["Adjacency list vs. matrix","BFS & DFS with a visited set","Connected components","Cycle detection"],
+      links:[["Number of Islands","https://leetcode.com/problems/number-of-islands/"],["Clone Graph","https://leetcode.com/problems/clone-graph/"]]},
+    { name:"Ordering & paths", learn:"topo-sort", items:["Topological sort","Shortest path: Dijkstra, Bellman-Ford","Minimum spanning tree: Prim, Kruskal"],
+      links:[["Course Schedule","https://leetcode.com/problems/course-schedule/"],["Network Delay (Dijkstra)","https://leetcode.com/problems/network-delay-time/"]]},
+    { name:"Connectivity", learn:"union-find", items:["Union-Find (Disjoint Set)","Path compression + union by rank"],
+      links:[["Redundant Connection","https://leetcode.com/problems/redundant-connection/"]]},
+  ]},
+  { n:"6", title:"Dynamic Programming", meta:"Weeks 9–11", topics:[
+    { name:"DP patterns (easy → hard)", learn:"dp", items:["Memoization vs. building a table","Spotting the repeated subproblem","1D: climbing stairs, house robber","Knapsack, coin change","Sequences: LIS, LCS, edit distance","Grid paths"],
+      links:[["Climbing Stairs","https://leetcode.com/problems/climbing-stairs/"],["House Robber","https://leetcode.com/problems/house-robber/"],["Coin Change","https://leetcode.com/problems/coin-change/"],["Longest Common Subseq","https://leetcode.com/problems/longest-common-subsequence/"]]},
+  ]},
+  { n:"7", title:"Advanced Topics", meta:"Week 12+", topics:[
+    { name:"Going further", learn:"greedy", items:["Greedy algorithms & when they work","Segment trees & Fenwick (BIT)","Bit manipulation tricks","String algorithms: KMP, Z, Rabin-Karp","Number theory: sieve, GCD, modular arithmetic"],
+      links:[["Jump Game (Greedy)","https://leetcode.com/problems/jump-game/"],["Range Sum Mutable","https://leetcode.com/problems/range-sum-query-mutable/"],["Count Primes","https://leetcode.com/problems/count-primes/"]]},
+  ]},
+];
+
+const KEY = "dsa-roadmap-v2";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+const CIRC = 2*Math.PI*20;
+const phasesEl = document.getElementById("phases");
+const iid = (pi,ti,ii) => `p${pi}-t${ti}-i${ii}`;
+
+function build() {
+  let html = "";
+  DATA.forEach((p, pi) => {
+    let topics = "";
+    p.topics.forEach((tp, ti) => {
+      let items = "";
+      tp.items.forEach((it, ii) => {
+        const id = iid(pi,ti,ii), on = !!state[id];
+        items += `<li class="item"><input type="checkbox" id="${id}" data-id="${id}" ${on?"checked":""}>
+          <label for="${id}"><span class="box">${CHECK}</span><span class="txt">${it}</span></label></li>`;
+      });
+      const learn = tp.learn ? `<a class="learn" href="${LESSONS}#${tp.learn}" target="_blank" rel="noopener">📖 Learn</a>` : "";
+      const codePath = tp.learn && CODE_MAP[tp.learn];
+      const code = codePath ? `<a class="codelink" href="${CODE}#${codePath}" target="_blank" rel="noopener">💻 Code</a>` : "";
+      const links = tp.links ? `<div class="practice"><span class="plabel">Try</span>`+
+        tp.links.map(l=>`<a class="prob" href="${l[1]}" target="_blank" rel="noopener">${l[0]}</a>`).join("")+`</div>` : "";
+      topics += `<div class="topic"><div class="topic-head"><p class="topic-name">${tp.name}</p><span class="topic-actions">${learn}${code}</span></div>
+        <ul class="items">${items}</ul>${links}</div>`;
+    });
+    html += `<div class="phase" data-phase="${pi}" data-open="0">
+      <button class="p-head" aria-expanded="false">
+        <span class="pnum">${p.n}</span>
+        <span class="p-titles"><h3>${p.title}</h3><span class="p-meta">${p.meta}</span></span>
+        <span class="mini-count">0/0</span>
+        <svg width="40" height="40" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--track)" stroke-width="5"/>
+          <circle class="phase-arc" cx="24" cy="24" r="20" fill="none" stroke="var(--track)" stroke-width="5" stroke-linecap="round"
+            transform="rotate(-90 24 24)" stroke-dasharray="${CIRC}" stroke-dashoffset="${CIRC}" style="transition:stroke-dashoffset .4s ease,stroke .3s"/></svg>
+        <svg class="chev" width="16" height="16" viewBox="0 0 16 16"><path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="p-body"><div class="p-clip"><div class="p-pad">${topics}</div></div></div></div>`;
+  });
+  phasesEl.innerHTML = html;
+}
+
+function updateProgress() {
+  let gT=0, gD=0;
+  document.querySelectorAll(".phase").forEach(card => {
+    const cbs = card.querySelectorAll('input[type="checkbox"]');
+    let t=cbs.length, d=0; cbs.forEach(c=>{ if(c.checked) d++; });
+    gT+=t; gD+=d;
+    card.querySelector(".mini-count").textContent = `${d}/${t}`;
+    const arc = card.querySelector(".phase-arc");
+    arc.style.strokeDashoffset = CIRC*(1-(t?d/t:0));
+    const complete = t>0 && d===t;
+    card.classList.toggle("complete", complete);
+    arc.setAttribute("stroke", complete? "var(--done)" : (d>0? "var(--wip)" : "var(--track)"));
+  });
+  const pct = gT? Math.round(gD/gT*100) : 0;
+  document.getElementById("pct").textContent = pct+"%";
+  document.getElementById("doneCount").textContent = gD;
+  document.getElementById("totalCount").textContent = gT;
+  document.getElementById("mainArc").style.strokeDashoffset = CIRC*(1-(gT?gD/gT:0));
+}
+
+document.addEventListener("click", e => {
+  const head = e.target.closest(".p-head");
+  if (!head) return;
+  const phase = head.closest(".phase");
+  const open = phase.getAttribute("data-open") === "1";
+  phase.setAttribute("data-open", open?"0":"1");
+  head.setAttribute("aria-expanded", String(!open));
+});
+
+phasesEl.addEventListener("change", e => {
+  const cb = e.target.closest('input[type="checkbox"]');
+  if (!cb) return;
+  if (cb.checked) state[cb.dataset.id] = 1; else delete state[cb.dataset.id];
+  localStorage.setItem(KEY, JSON.stringify(state));
+  updateProgress();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("Reset all progress on this device?")) return;
+  state = {};
+  localStorage.removeItem(KEY);
+  document.querySelectorAll('#phases input[type="checkbox"]').forEach(c=>{ c.checked=false; });
+  updateProgress();
+});
+
+build();
+updateProgress();
+</script>
+
+</body>
+</html>
