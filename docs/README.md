@@ -40,6 +40,16 @@ The workflow keeps the Code Lab in sync with your C++ files — edit a `.cpp`, p
 
 Either way, the site's home page is `index.html` (the roadmap).
 
+### Troubleshooting: "Branch main is not allowed to deploy to github-pages"
+
+This is an environment protection rule, not a workflow bug. Fix it in the repo settings:
+
+- **Settings → Pages → Source** must be **GitHub Actions**.
+- **Settings → Environments → `github-pages` → Deployment branches and tags** — either choose **No restriction**, or add a rule allowing **`main`**.
+- Make sure **`main` is the repository's default branch** (**Settings → General → Default branch**). The environment only trusts the default branch unless you add a rule above.
+
+Then re-run the workflow (Actions tab → the failed run → **Re-run jobs**).
+
 ## Notes
 
 - Progress (checked items) is stored per-browser via `localStorage` — it won't sync across devices.
