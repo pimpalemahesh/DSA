@@ -1,5 +1,7 @@
 # Data Structures & Algorithms Roadmap
 
+🧩 An interactive version of this roadmap lives here: **[DSA Interactive Roadmap](https://pimpalemahesh.github.io/DSA/)**
+
 A structured, phase-by-phase path from fundamentals to advanced topics. Work top to bottom — each phase builds on the last. Check off items as you go.
 
 **Suggested pace:** ~12–16 weeks at 1–2 hours/day. Adjust freely.
